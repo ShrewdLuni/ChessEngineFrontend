@@ -1,9 +1,8 @@
 import { useLayoutEffect, useState } from "react";
 import { Piece } from "./Piece";
+import { Tile } from "./Tile";
 
 export const ChessBoard = () => {
-  const whiteTile = <div className="flex justify-center items-center h-[100px] max-w-[100px] bg-[#1a1e23] aspect-square hover:border-solid hover:border-[#fffaf6] hover:border-[4px] hover:rounded-sm transition-all duration-100"><Piece handleDrop={move}/></div>
-  const blackTile = <div className="flex justify-center items-center h-[100px] max-w-[100px] bg-[#8c8fbc] aspect-square hover:border-solid hover:border-[#fffaf6] hover:border-[4px] hover:rounded-sm transition-all duration-100"></div>
 
   let ChessBoard = document.getElementById("Board");
   let rect = ChessBoard?.getBoundingClientRect()
@@ -20,10 +19,13 @@ export const ChessBoard = () => {
     // });
   }, []);
 
-  let initialBoard : JSX.Element[] = []
+  let pawn = <Piece handleDrop={move}/>
+  let initialBoard: JSX.Element[] = []
+
   for(let i = 0;i < 64; i++){
-    initialBoard.push((i + Math.floor(i/8)) % 2 == 0 ? whiteTile : blackTile)
-  } 
+    initialBoard.push(<Tile isWhite={(i + Math.floor(i/8)) % 2 == 0} piece={null}/>)
+  }
+  initialBoard[63] = <Tile isWhite={(63 + Math.floor(63/8)) % 2 == 0} piece={pawn}/>
 
   let moves = ["a","b","c","d","e","f","g","h"]
 
@@ -46,16 +48,17 @@ export const ChessBoard = () => {
   }
 
   function move(){
-    initialBoard[1] = <div className="flex justify-center items-center h-[100px] max-w-[100px] bg-[#1a1e23] aspect-square hover:border-solid hover:border-[#fffaf6] hover:border-[4px] hover:rounded-sm transition-all duration-100"><Piece handleDrop={move}/></div>
-    setBoard(initialBoard)
+    console.log("чиназес")
+    initialBoard[0] = <Tile isWhite={(0 + Math.floor(0/8)) % 2 == 0} piece={pawn}/>
+    initialBoard[63] = <Tile isWhite={(63 + Math.floor(63/8)) % 2 == 0} piece={null}/>
+    setBoard([...initialBoard])
   }
 
-  let pawn = <Piece handleDrop={showPosition}/>
-  let pieces = [pawn]
+
 
   return (
     <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={showPosition}>
-      {board}
+      {board.map(tile => tile)}
     </div>
   )
 }
