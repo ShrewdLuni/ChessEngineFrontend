@@ -23,7 +23,7 @@ export const ChessBoard = () => {
   let initialBoard: JSX.Element[] = []
 
   let moves = ["a","b","c","d","e","f","g","h"]
-  
+
   let convertor: {[key: string]: number} = {}
   let c = 0
   for(let i = 8;i > 0; i--)
@@ -33,7 +33,6 @@ export const ChessBoard = () => {
   for(let i = 0;i < 64; i++){
     initialBoard.push(<Tile isWhite={(i + Math.floor(i/8)) % 2 == 0} piece={null}/>)
   }
-  initialBoard[63] = <Tile isWhite={(63 + Math.floor(63/8)) % 2 == 0} piece={pawn}/>
 
 
   const [board, setBoard] = useState(initialBoard);
@@ -61,10 +60,33 @@ export const ChessBoard = () => {
     setBoard([...initialBoard])
   }
 
+  function FENtoBoard(position : string){
+    console.log(position)
+    let fenToPiece:{[key: string]: "pawn" | "knight" | "bishop" | "rook" | "queen" | "king"} = {
+      "p" : "pawn",
+      "n" : "knight",
+      "b" : "bishop",
+      "r" : "rook",
+      "q" : "queen",
+      "k" : "king",
+    }
+
+    let index : number = 0;
+    for (let i = 0; i < position.length; i++) {
+      if(!isNaN(Number(position.charAt(i)))){
+        index += Number(position.charAt(i))
+      }
+      else if(position.charAt(i) != "/"){
+        initialBoard[index] = <Tile isWhite={(index + Math.floor(index/8)) % 2 == 0} piece={<Piece pieceType={fenToPiece[position.charAt(i).toLowerCase()]} isWhite={position.charAt(i) == position.charAt(i).toUpperCase()} handleDrop={move}/>}/>
+        index++;
+      }
+    }
+    setBoard([...initialBoard])
+  }
+
   return (
-    <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={showPosition}>
-      {board}
-      {/* {board.map(tile => tile)} */}
+    <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={() => {FENtoBoard("8/5k2/3p4/1p1Pp2p/pP2Pp1P/P4P1K/8/8")}}>
+      {board.map(tile => tile)}
     </div>
   )
 }

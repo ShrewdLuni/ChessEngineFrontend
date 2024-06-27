@@ -1,5 +1,5 @@
 import whitePawn from '../assets/WhitePawn.png'
-import whiteKnight  from '../assets/WhiteKing.png'
+import whiteKnight  from '../assets/WhiteKnight.png'
 import whiteBishop from '../assets/WhiteBishop.png'
 import whiteRook from '../assets/WhiteRook.png'
 import whiteQueen from '../assets/WhiteQueen.png'
