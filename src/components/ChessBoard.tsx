@@ -22,12 +22,19 @@ export const ChessBoard = () => {
   let pawn = <Piece pieceType="knight" isWhite={false} handleDrop={move}/>
   let initialBoard: JSX.Element[] = []
 
+  let moves = ["a","b","c","d","e","f","g","h"]
+  
+  let convertor: {[key: string]: number} = {}
+  let c = 0
+  for(let i = 8;i > 0; i--)
+    for(let j = 0;j < 8; j++)
+      convertor[moves[j] + "" + i] = c++
+
   for(let i = 0;i < 64; i++){
     initialBoard.push(<Tile isWhite={(i + Math.floor(i/8)) % 2 == 0} piece={null}/>)
   }
   initialBoard[63] = <Tile isWhite={(63 + Math.floor(63/8)) % 2 == 0} piece={pawn}/>
 
-  let moves = ["a","b","c","d","e","f","g","h"]
 
   const [board, setBoard] = useState(initialBoard);
 
@@ -56,7 +63,8 @@ export const ChessBoard = () => {
 
   return (
     <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={showPosition}>
-      {board.map(tile => tile)}
+      {board}
+      {/* {board.map(tile => tile)} */}
     </div>
   )
 }
