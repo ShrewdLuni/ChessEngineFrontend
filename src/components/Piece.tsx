@@ -13,21 +13,21 @@ import blackQueen from '../assets/BlackQueen.png'
 import blackKing from '../assets/BlackKing.png'
 
 interface PieceProps {
-  pieceType : "pawn" | "knight" | "bishop" | "rook" | "queen" | "king"
-  isWhite : boolean
-  handleDrag : any
-  handleDrop : any
+  pieceType: "pawn" | "knight" | "bishop" | "rook" | "queen" | "king"
+  isWhite: boolean
+  handleDrag: any
+  handleDrop: any
 }
 
 export const Piece = ({pieceType, isWhite, handleDrag, handleDrop} : PieceProps) => {
-  let white = {"pawn":whitePawn,"knight":whiteKnight,"bishop":whiteBishop,"rook":whiteRook,"queen":whiteQueen,"king":whiteKing}
-  let black = {"pawn":blackPawn,"knight":blackKnight,"bishop":blackBishop,"rook":blackRook,"queen":blackQueen,"king":blackKing}
-  let piece = isWhite ? white[pieceType] : black[pieceType]
+  const white = {"pawn": whitePawn, "knight": whiteKnight, "bishop": whiteBishop, "rook": whiteRook, "queen": whiteQueen, "king": whiteKing}
+  const black = {"pawn": blackPawn, "knight": blackKnight, "bishop": blackBishop, "rook": blackRook, "queen": blackQueen, "king": blackKing}
+  const piece = isWhite ? white[pieceType] : black[pieceType]
 
 
   return (
-    <div className="" draggable onDragStart={handleDrag} onDragEnd={handleDrop}>
-      <img src={piece} alt="pawn" className="h-[92px] aspect-square cursor-grab"/>
+    <div className="bg-contain h-[92px] w-[92px] z-50" draggable onDragStart={handleDrag} onDragEnd={handleDrop}>
+      <img src={piece} alt="pawn" className="h-[92px] aspect-square cursor-grab" draggable onDragStart={handleDrag} onDragEnd={handleDrop}/>
     </div>
   )
 }
