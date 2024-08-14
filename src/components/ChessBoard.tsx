@@ -48,7 +48,7 @@ export const ChessBoard = () => {
   
   function move(){
     const newBoard = [...board]
-    console.log(startPosition,endPosition)
+    console.log(startPosition, endPosition)
     
     const start = Object.assign({}, newBoard[convertor[startPosition]]);
     const end = Object.assign({}, newBoard[convertor[endPosition]]);
@@ -87,7 +87,16 @@ export const ChessBoard = () => {
     const position = fields[0];
     for (let i = 0; i < position.length; i++) {
       if(!isNaN(Number(position.charAt(i)))){
-        index += Number(position.charAt(i))
+        // index += Number(position.charAt(i))
+        let empty = Number(position.charAt(i));
+        for(let j = 0; j < empty; j++) {
+          initialBoard[index] = {
+            element:<Tile isWhite={(index + Math.floor(index/8)) % 2 == 0} piece={null}/>,
+            tile:{isWhite:((index + Math.floor(index/8)) % 2 == 0)},
+            piece:{isWhite:(position.charAt(i) == position.charAt(i).toUpperCase()),pieceType:"none"}} 
+          index++;
+        }
+        console.log(index,"empty")
       }
       else if(position.charAt(i) != "/"){
         initialBoard[index] = {
