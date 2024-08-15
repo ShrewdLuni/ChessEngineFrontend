@@ -1,7 +1,6 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { Piece } from "./Piece";
 import { Tile } from "./Tile";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import helpers from "../lib/helper"
 
 export const ChessBoard = () => {
@@ -13,6 +12,9 @@ export const ChessBoard = () => {
   let rect = ChessBoard?.getBoundingClientRect()
   let x : number = rect == undefined ? -1 : rect.left == undefined ? -1 : rect.left
   let y : number = rect == undefined ? -1 : rect.top == undefined ? -1 : rect.top
+
+  let handleDrag = (e : DragEvent) => {setStratPostion(showPosition(e))}
+  let handleDrop = (e : DragEvent) => {setEndPostion(showPosition(e));}
 
   useLayoutEffect(() => {
     ChessBoard = document.getElementById("Board");
@@ -31,8 +33,8 @@ export const ChessBoard = () => {
 
   const initialBoard: {
     element: JSX.Element;
-    tile:{isWhite:boolean};
-    piece:{isWhite:boolean,pieceType : "none" | "pawn" | "knight" | "bishop" | "rook" | "queen" | "king"}
+    tile: {isWhite: boolean};
+    piece: {isWhite: boolean, pieceType : "none" | "pawn" | "knight" | "bishop" | "rook" | "queen" | "king"}
   }[] = helpers.getBoard();
 
   const moves = ["a","b","c","d","e","f","g","h"]
@@ -40,6 +42,7 @@ export const ChessBoard = () => {
   const convertor: {[key: string]: number} = helpers.getConvertor();
 
   const [board, setBoard] = useState(initialBoard);
+
   function showPosition(e : MouseEvent | React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const one = helpers.clamp(Math.floor((e.clientX - x) / 100), 0, 7)
     const two = helpers.clamp(Math.floor((e.clientY - y) / 100), 0, 7)
@@ -52,13 +55,14 @@ export const ChessBoard = () => {
     
     const start = Object.assign({}, newBoard[convertor[startPosition]]);
     const end = Object.assign({}, newBoard[convertor[endPosition]]);
+    
     newBoard[convertor[endPosition]] = {
     element:<Tile 
       isWhite={end.tile.isWhite} piece={start.piece.pieceType == "none" ? null : 
       <Piece pieceType={start.piece.pieceType} 
         isWhite={start.piece.isWhite} 
-        handleDrag={(e : DragEvent) => {setStratPostion(showPosition(e))}} 
-        handleDrop={(e : DragEvent) => {setEndPostion(showPosition(e));}}/>}
+        handleDrag={handleDrag} 
+        handleDrop={handleDrop}/>}
         />,
     tile:{isWhite:end.tile.isWhite},
     piece:{isWhite:start.piece.isWhite,pieceType:start.piece.pieceType}}
@@ -103,8 +107,8 @@ export const ChessBoard = () => {
         element:<Tile isWhite={(index + Math.floor(index/8)) % 2 == 0} piece={
         <Piece pieceType={fenToPiece[position.charAt(i).toLowerCase()]} 
         isWhite={position.charAt(i) == position.charAt(i).toUpperCase()} 
-        handleDrag={(e : DragEvent) => {setStratPostion(showPosition(e))}} 
-        handleDrop={(e : DragEvent) => {setEndPostion(showPosition(e));}}/>}/>,
+        handleDrag={handleDrag} 
+        handleDrop={handleDrop}/>}/>,
         tile:{isWhite:((index + Math.floor(index/8)) % 2 == 0)},
         piece:{isWhite:(position.charAt(i) == position.charAt(i).toUpperCase()),pieceType:fenToPiece[position.charAt(i).toLowerCase()]}}
         index++;
