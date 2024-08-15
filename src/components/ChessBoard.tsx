@@ -10,20 +10,18 @@ export const ChessBoard = () => {
 
   let ChessBoard = document.getElementById("Board");
   let rect = ChessBoard?.getBoundingClientRect()
-  let x : number = rect == undefined ? -1 : rect.left == undefined ? -1 : rect.left
-  let y : number = rect == undefined ? -1 : rect.top == undefined ? -1 : rect.top
+  let x: number = rect?.left ?? -1;
+  let y: number = rect?.top ?? -1;
 
-  let handleDrag = (e : DragEvent) => {setStratPostion(showPosition(e))}
-  let handleDrop = (e : DragEvent) => {setEndPostion(showPosition(e));}
+  let handleDrag = (e : DragEvent) => {setStratPostion(getMousePosition(e))}
+  let handleDrop = (e : DragEvent) => {setEndPostion(getMousePosition(e));}
 
   useLayoutEffect(() => {
     ChessBoard = document.getElementById("Board");
     rect = ChessBoard?.getBoundingClientRect()
-    x = rect == undefined ? -1 : rect.left == undefined ? -1 : rect.left
-    y = rect == undefined ? -1 : rect.top == undefined ? -1 : rect.top
-    ChessBoard?.addEventListener("mousemove", (e) => {
-      showPosition(e)
-    });
+    x = rect?.left ?? -1;
+    y = rect?.top ?? -1;
+
     FENtoBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
   }, []);
 
@@ -43,7 +41,7 @@ export const ChessBoard = () => {
 
   const [board, setBoard] = useState(initialBoard);
 
-  function showPosition(e : MouseEvent | React.MouseEvent<HTMLDivElement, MouseEvent>) {
+  function getMousePosition(e : MouseEvent | React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const one = helpers.clamp(Math.floor((e.clientX - x) / 100), 0, 7)
     const two = helpers.clamp(Math.floor((e.clientY - y) / 100), 0, 7)
     return(moves[one] + "" + (8-two))
@@ -91,7 +89,6 @@ export const ChessBoard = () => {
     const position = fields[0];
     for (let i = 0; i < position.length; i++) {
       if(!isNaN(Number(position.charAt(i)))){
-        // index += Number(position.charAt(i))
         let empty = Number(position.charAt(i));
         for(let j = 0; j < empty; j++) {
           initialBoard[index] = {
@@ -119,11 +116,9 @@ export const ChessBoard = () => {
 
   return (
     <div>
-      <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={(e) => {console.log(showPosition(e))}}>
+      <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1">
         {board.map(item => item.element)}
       </div>
-      <p className="text-white text-xl">{startPosition}</p>
-      <p className="text-white text-xl">{endPosition}</p>
     </div>
   )
 }
