@@ -5,7 +5,7 @@ import helpers from "../lib/helper"
 
 export const ChessBoard = () => {
 
-  const [startPosition,setStratPostion] = useState("e6")
+  const [startPosition,setStartPostion] = useState("e6")
   const [endPosition,setEndPostion] = useState("e6")
 
   let ChessBoard = document.getElementById("Board");
@@ -13,16 +13,27 @@ export const ChessBoard = () => {
   let x: number = rect?.left ?? -1;
   let y: number = rect?.top ?? -1;
 
-  let handleDrag = (e : DragEvent) => {setStratPostion(getMousePosition(e))}
+  let handleDrag = (e : DragEvent) => {setStartPostion(getMousePosition(e))}
   let handleDrop = (e : DragEvent) => {setEndPostion(getMousePosition(e));}
 
-  useLayoutEffect(() => {
+
+  const updatePosition = () => {
     ChessBoard = document.getElementById("Board");
-    rect = ChessBoard?.getBoundingClientRect()
+    rect = ChessBoard?.getBoundingClientRect();
     x = rect?.left ?? -1;
     y = rect?.top ?? -1;
+  };
 
+  useLayoutEffect(() => {
     FENtoBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+
+    updatePosition()
+
+    window.addEventListener('resize', updatePosition);
+
+    return () => {
+      window.removeEventListener('resize', updatePosition);
+    };
   }, []);
 
   useEffect(() => {
@@ -97,7 +108,6 @@ export const ChessBoard = () => {
             piece:{isWhite:(position.charAt(i) == position.charAt(i).toUpperCase()),pieceType:"none"}} 
           index++;
         }
-        console.log(index,"empty")
       }
       else if(position.charAt(i) != "/"){
         initialBoard[index] = {
