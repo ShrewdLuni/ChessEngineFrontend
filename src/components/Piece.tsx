@@ -26,8 +26,8 @@ export const Piece = ({pieceType, isWhite, handleDrag, handleDrop} : PieceProps)
 
 
   return (
-    <div className="bg-contain h-[92px] w-[92px] z-50" draggable onDragStart={handleDrag} onDragEnd={handleDrop}>
-      <img src={piece} alt="pawn" className="h-[92px] aspect-square cursor-grab" draggable onDragStart={handleDrag} onDragEnd={handleDrop}/>
+    <div className="bg-contain w-full h-full z-50" draggable onDragStart={handleDrag} onDragEnd={handleDrop}>
+      <img src={piece} alt="pawn" className="w-full h-full aspect-square cursor-grab" draggable onDragStart={handleDrag} onDragEnd={handleDrop}/>
     </div>
   )
 }
