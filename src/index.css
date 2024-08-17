@@ -74,18 +74,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-@layer components {
-  .myclass {
-
-    @media (orientation: portrait) {
-      width: calc(100vh / 8);
-      height: calc(100vh / 8);
-    }
-
-    @media (orientation: landscape) {
-      width: calc(100vw / 8);
-      height: calc(100vw / 8);
-    }
-  }
-}
