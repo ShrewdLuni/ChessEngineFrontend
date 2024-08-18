@@ -6,7 +6,7 @@ import helpers from "../lib/helper"
 export const ChessBoard = () => {
 
   const [startPosition,setStartPostion] = useState("e6")
-  const [endPosition,setEndPostion] = useState("e6")
+  const [targetPosition,setTargetPosition] = useState("e6")
 
   let ChessBoard = document.getElementById("Board");
   let rect = ChessBoard?.getBoundingClientRect()
@@ -15,7 +15,7 @@ export const ChessBoard = () => {
   let sideSize = ChessBoard?.clientHeight! / 8;
 
   let handleDrag = (e : DragEvent) => {setStartPostion(getMousePosition(e))}
-  let handleDrop = (e : DragEvent) => {setEndPostion(getMousePosition(e));}
+  let handleDrop = (e : DragEvent) => {setTargetPosition(getMousePosition(e));}
 
   const [randomInt, setRandomInt] = useState(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
@@ -42,7 +42,7 @@ export const ChessBoard = () => {
 
   useEffect(() => {
     move();
-  }, [endPosition])
+  }, [targetPosition])
 
   useEffect(() => {
     const ws = new WebSocket("ws://127.0.0.1:8000/ws/some_path/");
@@ -98,18 +98,18 @@ export const ChessBoard = () => {
   function getMousePosition(e : MouseEvent | React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const one = helpers.clamp(Math.floor((e.clientX - x) / sideSize), 0, 7)
     const two = helpers.clamp(Math.floor((e.clientY - y) / sideSize), 0, 7)
+
     console.log("showpos",sideSize)
     return(moves[one] + "" + (8-two))
   }
   
   function move(){
     const newBoard = [...board]
-    // console.log(startPosition, endPosition)
     
     const start = Object.assign({}, newBoard[convertor[startPosition]]);
-    const end = Object.assign({}, newBoard[convertor[endPosition]]);
+    const end = Object.assign({}, newBoard[convertor[targetPosition]]);
     
-    newBoard[convertor[endPosition]] = {
+    newBoard[convertor[targetPosition]] = {
     element:<Tile 
       isWhite={end.tile.isWhite} piece={start.piece.pieceType == "none" ? null : 
       <Piece pieceType={start.piece.pieceType} 
@@ -178,7 +178,7 @@ export const ChessBoard = () => {
           {startPosition}
         </p>
         <p className="text-xl text-white">
-          {startPosition}
+          {targetPosition}
         </p>
       </div>
     </div>
