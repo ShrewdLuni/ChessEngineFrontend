@@ -173,14 +173,6 @@ export const ChessBoard = () => {
       <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={() => {getRandomIntFunction()}}>
         {board.map(item => item.element)}
       </div>
-      <div>
-        <p className="text-xl text-white">
-          {startPosition}
-        </p>
-        <p className="text-xl text-white">
-          {targetPosition}
-        </p>
-      </div>
     </div>
   )
 }
