@@ -11,6 +11,7 @@ const helpers = {
         convertor[moves[j] + "" + i] = c++
     return convertor;
   },
+
   getBoard: function(){
     type BoardItem = {
       element: JSX.Element;
@@ -24,6 +25,7 @@ const helpers = {
     }
     return board;
   },
+
   clamp: function(target:number, min:number, max:number){
     if(target < min){
       return min;
@@ -32,6 +34,11 @@ const helpers = {
       return max;
     }
     return target;
+  },
+  
+  getIndexFromSquare: function(square: string){
+    console.log((square.charCodeAt(0) - 97) + (8 * (8 - parseInt(square[1]))))
+    return ((square.charCodeAt(0) - 97) + (8 * (8 - parseInt(square[1]))))
   }
 }
 

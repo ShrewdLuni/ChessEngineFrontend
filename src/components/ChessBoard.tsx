@@ -91,8 +91,6 @@ export const ChessBoard = () => {
 
   const moves = ["a","b","c","d","e","f","g","h"]
 
-  const convertor: {[key: string]: number} = helpers.getConvertor();
-
   const [board, setBoard] = useState(initialBoard);
 
   function getMousePosition(e : MouseEvent | React.MouseEvent<HTMLDivElement, MouseEvent>) {
@@ -106,10 +104,10 @@ export const ChessBoard = () => {
   function move(){
     const newBoard = [...board]
     
-    const start = Object.assign({}, newBoard[convertor[startPosition]]);
-    const end = Object.assign({}, newBoard[convertor[targetPosition]]);
+    const start = Object.assign({}, newBoard[helpers.getIndexFromSquare(startPosition)]);
+    const end = Object.assign({}, newBoard[helpers.getIndexFromSquare(targetPosition)]);
     
-    newBoard[convertor[targetPosition]] = {
+    newBoard[helpers.getIndexFromSquare(targetPosition)] = {
     element:<Tile 
       isWhite={end.tile.isWhite} piece={start.piece.pieceType == "none" ? null : 
       <Piece pieceType={start.piece.pieceType} 
@@ -120,7 +118,7 @@ export const ChessBoard = () => {
     tile:{isWhite:end.tile.isWhite},
     piece:{isWhite:start.piece.isWhite,pieceType:start.piece.pieceType}}
     
-    newBoard[convertor[startPosition]] = {
+    newBoard[helpers.getIndexFromSquare(startPosition)] = {
     element:<Tile isWhite={start.tile.isWhite} piece={null}/>,
     tile:{isWhite:start.tile.isWhite},
     piece:{isWhite:end.piece.isWhite,pieceType:end.piece.pieceType}}
