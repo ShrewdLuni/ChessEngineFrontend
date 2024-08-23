@@ -1,7 +1,9 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { Piece } from "./Piece";
 import { Tile } from "./Tile";
+import '../assets/board.css';
 import helpers from "../lib/helper"
+import { cn } from "@/lib/utils";
 
 export const ChessBoard = () => {
 
@@ -168,8 +170,34 @@ export const ChessBoard = () => {
 
   return (
     <div>
-      <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={() => {getRandomIntFunction()}}>
-        {board.map(item => item.element)}
+      <div className="flex flex-row">
+        <div className={cn("boardHeight","flex flex-col justify-between text-center text-white font-bold text-lg mr-2")}>
+          <div className="flex flex-col h-full justify-center">8</div>
+          <div className="flex flex-col h-full justify-center">7</div>
+          <div className="flex flex-col h-full justify-center">6</div>
+          <div className="flex flex-col h-full justify-center">5</div>
+          <div className="flex flex-col h-full justify-center">4</div>
+          <div className="flex flex-col h-full justify-center">3</div>
+          <div className="flex flex-col h-full justify-center">2</div>
+          <div className="flex flex-col h-full justify-center">1</div>
+        </div>
+
+        <div>
+          <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={() => {getRandomIntFunction()}}>
+            {board.map(item => item.element)}
+          </div>
+          
+          <div className={cn("boardWidth","flex flex-row w-full justify-between text-center text-white font-bold text-lg")}>
+            <p className="w-full">a</p>
+            <p className="w-full">b</p>
+            <p className="w-full">c</p>
+            <p className="w-full">d</p>
+            <p className="w-full">e</p>
+            <p className="w-full">f</p>
+            <p className="w-full">g</p>
+            <p className="w-full">h</p>
+          </div>
+        </div>
       </div>
     </div>
   )

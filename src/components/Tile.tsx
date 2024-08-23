@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import '../assets/tile.css';
+import '../assets/board.css';
 
 interface TileProps{
   isWhite: boolean

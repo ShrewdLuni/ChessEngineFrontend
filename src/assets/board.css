@@ -1,0 +1,30 @@
+.tile {
+  width: calc(80vw / 8);
+  height: calc(80vw / 8);
+}
+
+.boardHeight {
+  height: calc(80vw);
+}
+
+.boardWidth {
+  width: calc(80vw);
+}
+
+
+
+@media (orientation: landscape) {
+  .tile {
+    width: calc(80vh / 8);
+    height: calc(80vh / 8);
+  }
+
+  .boardHeight {
+    height: calc(80vh);
+  }
+  
+  .boardWidth {
+    width: calc(80vh);
+  }
+}
+
