@@ -9,17 +9,12 @@ const helpers = {
     for(let i = 8;i > 0; i--)
       for(let j = 0;j < 8; j++)
         convertor[moves[j] + "" + i] = c++
+
     return convertor;
   },
 
   getBoard: function(){
-    type BoardItem = {
-      element: JSX.Element;
-      tile:{isWhite:boolean};
-      piece:{isWhite:boolean,pieceType : "none" | "pawn" | "knight" | "bishop" | "rook" | "queen" | "king"}
-    };
-
-    const board: BoardItem[] = []
+    const board: Board = []
     for(let i = 0;i < 64; i++){
       board.push({element:<Tile isWhite={(i + Math.floor(i/8)) % 2 == 0} piece={null}/>,tile:{isWhite:((i + Math.floor(i/8)) % 2 == 0)},piece:{isWhite:false,pieceType:"none"}})
     }
@@ -36,8 +31,7 @@ const helpers = {
     return target;
   },
   
-  getIndexFromSquare: function(square: string){
-    console.log((square.charCodeAt(0) - 97) + (8 * (8 - parseInt(square[1]))))
+  getIndexFromSquare: function(square: string){//O(1)
     return ((square.charCodeAt(0) - 97) + (8 * (8 - parseInt(square[1]))))
   }
 }

@@ -85,11 +85,7 @@ export const ChessBoard = () => {
   };
   
 
-  const initialBoard: {
-    element: JSX.Element;
-    tile: {isWhite: boolean};
-    piece: {isWhite: boolean, pieceType : "none" | "pawn" | "knight" | "bishop" | "rook" | "queen" | "king"}
-  }[] = helpers.getBoard();
+  const initialBoard: Board = helpers.getBoard();
 
   const moves = ["a","b","c","d","e","f","g","h"]
 
@@ -99,15 +95,14 @@ export const ChessBoard = () => {
     const one = helpers.clamp(Math.floor((e.clientX - x) / sideSize), 0, 7)
     const two = helpers.clamp(Math.floor((e.clientY - y) / sideSize), 0, 7)
 
-    console.log("showpos",sideSize)
     return(moves[one] + "" + (8-two))
   }
   
   function move(){
     const newBoard = [...board]
-    
     const start = Object.assign({}, newBoard[helpers.getIndexFromSquare(startPosition)]);
     const end = Object.assign({}, newBoard[helpers.getIndexFromSquare(targetPosition)]);
+    console.log(start,end)
     
     newBoard[helpers.getIndexFromSquare(targetPosition)] = {
     element:<Tile 
@@ -131,7 +126,7 @@ export const ChessBoard = () => {
   function FENtoBoard(FEN : string){
     const fields: string[] = FEN.split(" ")
 
-    const fenToPiece:{[key: string]: "pawn" | "knight" | "bishop" | "rook" | "queen" | "king"} = {
+    const fenToPiece:{[key: string]: PieceType} = {
       "p" : "pawn",
       "n" : "knight",
       "b" : "bishop",
@@ -181,12 +176,10 @@ export const ChessBoard = () => {
           <div className="flex flex-col h-full justify-center">2</div>
           <div className="flex flex-col h-full justify-center">1</div>
         </div>
-
         <div>
           <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={() => {getRandomIntFunction()}}>
             {board.map(item => item.element)}
           </div>
-          
           <div className={cn("boardWidth","flex flex-row w-full justify-between text-center text-white font-bold text-lg")}>
             <p className="w-full">a</p>
             <p className="w-full">b</p>
