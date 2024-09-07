@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { DragEvent, MouseEvent, useEffect, useLayoutEffect, useState } from "react";
 import { Piece } from "./Piece";
 import { Tile } from "./Tile";
 import '../assets/board.css';
@@ -18,6 +18,7 @@ export const ChessBoard = () => {
 
   let handleDrag = (e : DragEvent) => {setStartPostion(getMousePosition(e))}
   let handleDrop = (e : DragEvent) => {setTargetPosition(getMousePosition(e));}
+  let handleClick = (e : MouseEvent) => {setStartPostion(getMousePosition(e))}
 
   const [randomInt, setRandomInt] = useState(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
@@ -32,7 +33,6 @@ export const ChessBoard = () => {
 
   useLayoutEffect(() => {
     FENtoBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-
     updatePosition()
 
     window.addEventListener('resize', updatePosition);
@@ -44,10 +44,11 @@ export const ChessBoard = () => {
 
   useEffect(() => {
     move();
+    getData();
   }, [targetPosition])
 
   useEffect(() => {
-    const ws = new WebSocket("ws://127.0.0.1:8000/ws/some_path/");
+    const ws = new WebSocket("ws://127.0.0.1:8000/ws/chess/");
   
     ws.onopen = () => {
       console.log("Connected to WebSocket");
@@ -55,10 +56,7 @@ export const ChessBoard = () => {
   
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.random_int !== undefined) {
-        setRandomInt(data.random_int);
-        console.log("Received random int:", data.random_int);
-      }
+      console.log(data)
     };
   
     ws.onclose = () => {
@@ -72,13 +70,7 @@ export const ChessBoard = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (randomInt !== null) {
-      console.log("Random Int:", randomInt);
-    }
-  }, [randomInt]);
-  
-  const getRandomIntFunction = () => {
+  const getData = () => {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify({ message: "Get Random Int" }));
     }
@@ -102,7 +94,6 @@ export const ChessBoard = () => {
     const newBoard = [...board]
     const start = Object.assign({}, newBoard[helpers.getIndexFromSquare(startPosition)]);
     const end = Object.assign({}, newBoard[helpers.getIndexFromSquare(targetPosition)]);
-    console.log(start,end)
     
     newBoard[helpers.getIndexFromSquare(targetPosition)] = {
     element:<Tile 
@@ -110,7 +101,8 @@ export const ChessBoard = () => {
       <Piece pieceType={start.piece.pieceType} 
         isWhite={start.piece.isWhite} 
         handleDrag={handleDrag} 
-        handleDrop={handleDrop}/>}
+        handleDrop={handleDrop}
+        handleClick={handleClick}/>}
         />,
     tile:{isWhite:end.tile.isWhite},
     piece:{isWhite:start.piece.isWhite,pieceType:start.piece.pieceType}}
@@ -154,7 +146,8 @@ export const ChessBoard = () => {
         <Piece pieceType={fenToPiece[position.charAt(i).toLowerCase()]} 
         isWhite={position.charAt(i) == position.charAt(i).toUpperCase()} 
         handleDrag={handleDrag} 
-        handleDrop={handleDrop}/>}/>,
+        handleDrop={handleDrop}
+        handleClick={handleClick}/>}/>,
         tile:{isWhite:((index + Math.floor(index/8)) % 2 == 0)},
         piece:{isWhite:(position.charAt(i) == position.charAt(i).toUpperCase()),pieceType:fenToPiece[position.charAt(i).toLowerCase()]}}
         index++;
@@ -177,7 +170,7 @@ export const ChessBoard = () => {
           <div className="flex flex-col h-full justify-center">1</div>
         </div>
         <div>
-          <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={() => {getRandomIntFunction()}}>
+          <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={() => {getData()}}>
             {board.map(item => item.element)}
           </div>
           <div className={cn("boardWidth","flex flex-row w-full justify-between text-center text-white font-bold text-lg")}>
@@ -192,6 +185,7 @@ export const ChessBoard = () => {
           </div>
         </div>
       </div>
+      <p className="text-xl text-white font-bold">{startPosition + " " +  helpers.getIndexFromSquare(startPosition)}</p>
     </div>
   )
 }
