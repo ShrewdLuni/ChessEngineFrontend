@@ -20,8 +20,9 @@ export const ChessBoard = () => {
   let handleDrop = (e : DragEvent) => {setTargetPosition(getMousePosition(e));}
   let handleClick = (e : MouseEvent) => {setStartPostion(getMousePosition(e))}
 
-  const [randomInt, setRandomInt] = useState(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
+
+  const [movesData, setMovesData] = useState<{startingSquare : string, targetSquare: string}[]>()
 
   const updatePosition = () => {
     ChessBoard = document.getElementById("Board");
@@ -29,6 +30,7 @@ export const ChessBoard = () => {
     sideSize = ChessBoard?.clientHeight! / 8;
     x = rect?.left ?? -1;
     y = rect?.top ?? -1;
+    console.log(ChessBoard?.clientHeight)
   };
 
   useLayoutEffect(() => {
@@ -41,6 +43,29 @@ export const ChessBoard = () => {
       window.removeEventListener('resize', updatePosition);
     };
   }, []);
+
+  useEffect(() => {
+    if(movesData == undefined)
+      return
+    console.log(movesData)
+    let targetSquares = movesData.filter(move => move.startingSquare == (helpers.getIndexFromSquare(startPosition)).toString())
+    const newBoard = [...board]
+    for(let i = 0;i < targetSquares.length;i++){
+      const info = Object.assign({}, newBoard[Number(targetSquares[i].targetSquare)]);
+
+      newBoard[Number(targetSquares[i].targetSquare)] = {element:<Tile 
+      isWhite={info.tile.isWhite} isPossible={true} piece={info.piece.pieceType == "none" ? null : 
+      <Piece pieceType={info.piece.pieceType} 
+        isWhite={info.piece.isWhite} 
+        handleDrag={handleDrag} 
+        handleDrop={handleDrop}
+        handleClick={handleClick}/>}
+        />,
+      tile:{isWhite:info.tile.isWhite},
+      piece:{isWhite:info.piece.isWhite,pieceType:info.piece.pieceType}}
+    }
+    setBoard(newBoard)
+  }, [startPosition])
 
   useEffect(() => {
     move();
@@ -56,7 +81,7 @@ export const ChessBoard = () => {
   
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log(data)
+      setMovesData(data)
     };
   
     ws.onclose = () => {
@@ -82,6 +107,7 @@ export const ChessBoard = () => {
   const moves = ["a","b","c","d","e","f","g","h"]
 
   const [board, setBoard] = useState(initialBoard);
+  const [tiles, setTiles] = useState(helpers.getTiles())
 
   function getMousePosition(e : MouseEvent | React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const one = helpers.clamp(Math.floor((e.clientX - x) / sideSize), 0, 7)
@@ -97,7 +123,7 @@ export const ChessBoard = () => {
     
     newBoard[helpers.getIndexFromSquare(targetPosition)] = {
     element:<Tile 
-      isWhite={end.tile.isWhite} piece={start.piece.pieceType == "none" ? null : 
+      isWhite={end.tile.isWhite} isPossible={false} piece={start.piece.pieceType == "none" ? null : 
       <Piece pieceType={start.piece.pieceType} 
         isWhite={start.piece.isWhite} 
         handleDrag={handleDrag} 
@@ -108,7 +134,7 @@ export const ChessBoard = () => {
     piece:{isWhite:start.piece.isWhite,pieceType:start.piece.pieceType}}
     
     newBoard[helpers.getIndexFromSquare(startPosition)] = {
-    element:<Tile isWhite={start.tile.isWhite} piece={null}/>,
+    element:<Tile isWhite={start.tile.isWhite} isPossible={false} piece={null}/>,
     tile:{isWhite:start.tile.isWhite},
     piece:{isWhite:end.piece.isWhite,pieceType:end.piece.pieceType}}
 
@@ -134,7 +160,7 @@ export const ChessBoard = () => {
         let empty = Number(position.charAt(i));
         for(let j = 0; j < empty; j++) {
           initialBoard[index] = {
-            element:<Tile isWhite={(index + Math.floor(index/8)) % 2 == 0} piece={null}/>,
+            element:<Tile isWhite={(index + Math.floor(index/8)) % 2 == 0} isPossible={false} piece={null}/>,
             tile:{isWhite:((index + Math.floor(index/8)) % 2 == 0)},
             piece:{isWhite:(position.charAt(i) == position.charAt(i).toUpperCase()),pieceType:"none"}} 
           index++;
@@ -142,7 +168,7 @@ export const ChessBoard = () => {
       }
       else if(position.charAt(i) != "/"){
         initialBoard[index] = {
-        element:<Tile isWhite={(index + Math.floor(index/8)) % 2 == 0} piece={
+        element:<Tile isWhite={(index + Math.floor(index/8)) % 2 == 0} isPossible={false}  piece={
         <Piece pieceType={fenToPiece[position.charAt(i).toLowerCase()]} 
         isWhite={position.charAt(i) == position.charAt(i).toUpperCase()} 
         handleDrag={handleDrag} 
@@ -171,7 +197,10 @@ export const ChessBoard = () => {
         </div>
         <div>
           <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={() => {getData()}}>
-            {board.map(item => item.element)}
+            {tiles}
+            {/* {pieces}
+            {info} */}
+            {/* {board.map(item => item.element)} */}
           </div>
           <div className={cn("boardWidth","flex flex-row w-full justify-between text-center text-white font-bold text-lg")}>
             <p className="w-full">a</p>
@@ -185,7 +214,7 @@ export const ChessBoard = () => {
           </div>
         </div>
       </div>
-      <p className="text-xl text-white font-bold">{startPosition + " " +  helpers.getIndexFromSquare(startPosition)}</p>
+      {/* <p className="text-xl text-white font-bold">{startPosition + " " +  helpers.getIndexFromSquare(startPosition)}</p> */}
     </div>
   )
 }

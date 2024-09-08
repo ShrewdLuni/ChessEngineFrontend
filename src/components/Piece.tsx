@@ -28,7 +28,6 @@ export const Piece = ({pieceType, isWhite, handleDrag, handleDrop, handleClick} 
 
   return (
     <div className="relative bg-contain w-full h-full z-50 " draggable onDragStart={handleDrag} onDragEnd={handleDrop} onClick={handleClick}>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/30 w-[50%] aspect-square rounded-full" />
       <img src={piece} alt="pawn" className="w-full h-full aspect-square cursor-grab"/>
     </div>
   )

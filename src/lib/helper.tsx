@@ -1,4 +1,5 @@
 import { Tile } from "@/components/Tile"
+import { TileCopy } from "@/components/Tile copy"
 
 const helpers = {
   getConvertor: function(){
@@ -16,9 +17,17 @@ const helpers = {
   getBoard: function(){
     const board: Board = []
     for(let i = 0;i < 64; i++){
-      board.push({element:<Tile isWhite={(i + Math.floor(i/8)) % 2 == 0} piece={null}/>,tile:{isWhite:((i + Math.floor(i/8)) % 2 == 0)},piece:{isWhite:false,pieceType:"none"}})
+      board.push({element:<Tile isWhite={(i + Math.floor(i/8)) % 2 == 0} isPossible={false} piece={null}/>,tile:{isWhite:((i + Math.floor(i/8)) % 2 == 0)},piece:{isWhite:false,pieceType:"none"}})
     }
     return board;
+  },
+
+  getTiles: function(){
+    const tiles: JSX.Element[] = []
+    for(let i = 0;i < 64; i++){
+      tiles.push(<TileCopy isWhite={(i + Math.floor(i/8)) % 2 == 0}/>)
+    }
+    return tiles; 
   },
 
   clamp: function(target:number, min:number, max:number){
