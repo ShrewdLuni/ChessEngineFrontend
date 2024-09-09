@@ -15,19 +15,21 @@ import blackKing from '../assets/BlackKing.png'
 interface PieceProps {
   pieceType: "pawn" | "knight" | "bishop" | "rook" | "queen" | "king"
   isWhite: boolean
-  handleDrag: any
-  handleDrop: any
-  handleClick: any
+  handlers: {
+    handleDrag: any
+    handleDrop: any
+    handleClick: any
+  }
 }
 
-export const Piece = ({pieceType, isWhite, handleDrag, handleDrop, handleClick} : PieceProps) => {
+export const Piece = ({pieceType, isWhite, handlers} : PieceProps) => {
   const white = {"pawn": whitePawn, "knight": whiteKnight, "bishop": whiteBishop, "rook": whiteRook, "queen": whiteQueen, "king": whiteKing}
   const black = {"pawn": blackPawn, "knight": blackKnight, "bishop": blackBishop, "rook": blackRook, "queen": blackQueen, "king": blackKing}
   const piece = isWhite ? white[pieceType] : black[pieceType]
 
 
   return (
-    <div className="relative bg-contain w-full h-full z-50 " draggable onDragStart={handleDrag} onDragEnd={handleDrop} onClick={handleClick}>
+    <div className="relative bg-contain w-full h-full z-50 " draggable onDragStart={handlers.handleDrag} onDragEnd={handlers.handleDrop} onClick={handlers.handleClick}>
       <img src={piece} alt="pawn" className="w-full h-full aspect-square cursor-grab"/>
     </div>
   )

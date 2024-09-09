@@ -15,6 +15,14 @@ type Piece = {
   pieceType: PieceTypeWithNone;
 };
 
+
+type NewPiece = {
+  isWhite: boolean;
+  position: string
+  type: PieceType;
+};
+
+
 type PieceType = "pawn" | "knight" | "bishop" | "rook" | "queen" | "king";
 
 type PieceTypeWithNone = PieceType | "none";
