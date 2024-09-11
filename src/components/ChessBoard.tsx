@@ -1,6 +1,4 @@
 import { DragEvent, MouseEvent, useEffect, useLayoutEffect, useState } from "react";
-import { Piece } from "./Piece";
-import { Tile } from "./Tile";
 import '../assets/board.css';
 import helpers from "../lib/helper"
 import { cn } from "@/lib/utils";
@@ -89,11 +87,6 @@ export const ChessBoard = () => {
     }
   };
   
-
-  const initialBoard: Board = helpers.getBoard();
-
-
-  const [board, setBoard] = useState(initialBoard);
   const [tiles, setTiles] = useState(helpers.getTiles())
   const [pieces, setPieces] = useState(helpers.getPieces())
   const [moveHints, setMoveHints] = useState<{startingSquare:string,targetSquare: string}[]>();

@@ -1,11 +1,8 @@
-import { Tile } from "@/components/Tile"
 import { TileCopy } from "@/components/Tile copy"
 
 const moves = ["a","b","c","d","e","f","g","h"]
 
 const helpers = {
-
-
   getIndexFromPositionPrecomputed: function(){
     const convertor: {[key: string]: number} = {}
 
@@ -15,14 +12,6 @@ const helpers = {
         convertor[moves[j] + "" + i] = c++
 
     return convertor;
-  },
-
-  getBoard: function(){
-    const board: Board = []
-    for(let i = 0;i < 64; i++){
-      board.push({element:<Tile isWhite={(i + Math.floor(i/8)) % 2 == 0} isPossible={false} piece={null}/>,tile:{isWhite:((i + Math.floor(i/8)) % 2 == 0)},piece:{isWhite:false,pieceType:"none"}})
-    }
-    return board;
   },
 
   getTiles: function(){
