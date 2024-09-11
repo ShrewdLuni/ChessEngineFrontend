@@ -119,26 +119,14 @@ export const ChessBoard = () => {
   }
   
   function move(){
-    const newBoard = [...board]
-    const start = Object.assign({}, newBoard[helpers.getIndexFromSquare(startPosition)]);
-    const end = Object.assign({}, newBoard[helpers.getIndexFromSquare(targetPosition)]);
-    
-    newBoard[helpers.getIndexFromSquare(targetPosition)] = {
-    element:<Tile 
-      isWhite={end.tile.isWhite} isPossible={false} piece={start.piece.pieceType == "none" ? null : 
-      <Piece pieceType={start.piece.pieceType} 
-        isWhite={start.piece.isWhite} 
-        handlers={pieceEventHandlers}/>}
-        />,
-    tile:{isWhite:end.tile.isWhite},
-    piece:{isWhite:start.piece.isWhite,pieceType:start.piece.pieceType}}
-    
-    newBoard[helpers.getIndexFromSquare(startPosition)] = {
-    element:<Tile isWhite={start.tile.isWhite} isPossible={false} piece={null}/>,
-    tile:{isWhite:start.tile.isWhite},
-    piece:{isWhite:end.piece.isWhite,pieceType:end.piece.pieceType}}
-
-    setBoard(newBoard)
+    setPieces(prevPieces => {
+      const pieceIndex = prevPieces.findIndex(piece => piece.position === startPosition);
+      if (pieceIndex === -1) return prevPieces;
+  
+      return prevPieces.map((piece, index) =>
+        index === pieceIndex ? { ...piece, position: targetPosition } : piece
+      );
+    });
   }
 
   function FENtoBoard(FEN : string){
@@ -212,7 +200,8 @@ export const ChessBoard = () => {
           </div>
         </div>
       </div>
-      {/* <p className="text-xl text-white font-bold">{startPosition + " " +  helpers.getIndexFromSquare(startPosition)}</p> */}
+      <p className="text-xl text-white font-bold">{startPosition + " " +  helpers.getIndexFromSquare(startPosition)}</p>
+      <p className="text-xl text-white font-bold">{targetPosition + " " +  helpers.getIndexFromSquare(targetPosition)}</p>
     </div>
   )
 }
