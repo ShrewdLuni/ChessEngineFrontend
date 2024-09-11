@@ -1,10 +1,13 @@
 import { Tile } from "@/components/Tile"
 import { TileCopy } from "@/components/Tile copy"
 
+const moves = ["a","b","c","d","e","f","g","h"]
+
 const helpers = {
+
+
   getIndexFromPositionPrecomputed: function(){
     const convertor: {[key: string]: number} = {}
-    const moves = ["a","b","c","d","e","f","g","h"]
 
     let c = 0
     for(let i = 8;i > 0; i--)
@@ -89,12 +92,20 @@ const helpers = {
     return ((position.charCodeAt(0) - 97) + (8 * (8 - parseInt(position[1]))))
   },
 
+  getPositionFromIndex: function(index: number){
+    return this.getPositionFromRowAndCol(index % 8,Math.floor(index / 8))
+  },
+
   getRowAndColFromPosition: function(position: string) {
     return {row: 8 - parseInt(position[1]), col: position.charCodeAt(0) - 'a'.charCodeAt(0)}
   },
 
   getRowAndColFromIndex: function(position: number) {
     return {row: Math.floor(position / 8), col: position % 8}
+  },
+
+  getPositionFromRowAndCol: function(row: number, col: number){
+    return (moves[row] + "" + (8-col))
   }
 }
 
