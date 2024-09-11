@@ -22,6 +22,10 @@ type NewPiece = {
   type: PieceType;
 };
 
+type MoveHint = {
+  type: string
+  position: string
+};
 
 type PieceType = "pawn" | "knight" | "bishop" | "rook" | "queen" | "king";
 

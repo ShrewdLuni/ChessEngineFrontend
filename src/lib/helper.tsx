@@ -2,7 +2,7 @@ import { Tile } from "@/components/Tile"
 import { TileCopy } from "@/components/Tile copy"
 
 const helpers = {
-  getConvertor: function(){
+  getIndexFromPositionPrecomputed: function(){
     const convertor: {[key: string]: number} = {}
     const moves = ["a","b","c","d","e","f","g","h"]
 
@@ -85,8 +85,16 @@ const helpers = {
     return target;
   },
   
-  getIndexFromSquare: function(square: string){//O(1)
-    return ((square.charCodeAt(0) - 97) + (8 * (8 - parseInt(square[1]))))
+  getIndexFromPosition: function(position: string){//O(1)
+    return ((position.charCodeAt(0) - 97) + (8 * (8 - parseInt(position[1]))))
+  },
+
+  getRowAndColFromPosition: function(position: string) {
+    return {row: 8 - parseInt(position[1]), col: position.charCodeAt(0) - 'a'.charCodeAt(0)}
+  },
+
+  getRowAndColFromIndex: function(position: number) {
+    return {row: Math.floor(position / 8), col: position % 8}
   }
 }
 

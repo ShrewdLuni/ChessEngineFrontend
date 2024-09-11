@@ -5,6 +5,7 @@ import '../assets/board.css';
 import helpers from "../lib/helper"
 import { cn } from "@/lib/utils";
 import { PieceCopy } from "./Piece copy";
+import { MoveHint } from "./Hint";
 
 export const ChessBoard = () => {
 
@@ -50,22 +51,9 @@ export const ChessBoard = () => {
   useEffect(() => {
     if(movesData == undefined)
       return
-    console.log(movesData)
-    let targetSquares = movesData.filter(move => move.startingSquare == (helpers.getIndexFromSquare(startPosition)).toString())
-    const newBoard = [...board]
-    for(let i = 0;i < targetSquares.length;i++){
-      const info = Object.assign({}, newBoard[Number(targetSquares[i].targetSquare)]);
-
-      newBoard[Number(targetSquares[i].targetSquare)] = {element:<Tile 
-      isWhite={info.tile.isWhite} isPossible={true} piece={info.piece.pieceType == "none" ? null : 
-      <Piece pieceType={info.piece.pieceType} 
-        isWhite={info.piece.isWhite} 
-        handlers={pieceEventHandlers}/>}
-        />,
-      tile:{isWhite:info.tile.isWhite},
-      piece:{isWhite:info.piece.isWhite,pieceType:info.piece.pieceType}}
-    }
-    setBoard(newBoard)
+    let targetSquares = movesData.filter(move => move.startingSquare == (helpers.getIndexFromPosition(startPosition)).toString())
+    console.log(targetSquares)
+    setMoveHints(targetSquares)
   }, [startPosition])
 
   useEffect(() => {
@@ -109,7 +97,8 @@ export const ChessBoard = () => {
 
   const [board, setBoard] = useState(initialBoard);
   const [tiles, setTiles] = useState(helpers.getTiles())
-  const [pieces, setPieces] = useState<NewPiece[]>(helpers.getPieces())
+  const [pieces, setPieces] = useState(helpers.getPieces())
+  const [moveHints, setMoveHints] = useState<{startingSquare:string,targetSquare: string}[]>();
 
   function getMousePosition(e : MouseEvent | React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const one = helpers.clamp(Math.floor((e.clientX - x) / sideSize), 0, 7)
@@ -185,8 +174,7 @@ export const ChessBoard = () => {
           <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={() => {getData()}}>
             {tiles}
             {pieces.map(piece => <PieceCopy type={piece.type} position={piece.position} isWhite={piece.isWhite} handlers={pieceEventHandlers}/>)}
-            {/* {info} */}
-            {/* {board.map(item => item.element)} */}
+            {moveHints?.map(hint => <MoveHint type="" position={Number(hint.targetSquare)}/>)}
           </div>
           <div className={cn("boardWidth","flex flex-row w-full justify-between text-center text-white font-bold text-lg")}>
             <p className="w-full">a</p>
@@ -200,8 +188,8 @@ export const ChessBoard = () => {
           </div>
         </div>
       </div>
-      <p className="text-xl text-white font-bold">{startPosition + " " +  helpers.getIndexFromSquare(startPosition)}</p>
-      <p className="text-xl text-white font-bold">{targetPosition + " " +  helpers.getIndexFromSquare(targetPosition)}</p>
+      <p className="text-xl text-white font-bold">{startPosition + " " +  helpers.getIndexFromPosition(startPosition)}</p>
+      <p className="text-xl text-white font-bold">{targetPosition + " " +  helpers.getIndexFromPosition(targetPosition)}</p>
     </div>
   )
 }
