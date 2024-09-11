@@ -4,6 +4,7 @@ import { Tile } from "./Tile";
 import '../assets/board.css';
 import helpers from "../lib/helper"
 import { cn } from "@/lib/utils";
+import { PieceCopy } from "./Piece copy";
 
 export const ChessBoard = () => {
 
@@ -195,7 +196,7 @@ export const ChessBoard = () => {
         <div>
           <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={() => {getData()}}>
             {tiles}
-            {pieces.map(piece => <Piece pieceType={piece.type} isWhite={piece.isWhite} handlers={pieceEventHandlers}/>)}
+            {pieces.map(piece => <PieceCopy type={piece.type} position={piece.position} isWhite={piece.isWhite} handlers={pieceEventHandlers}/>)}
             {/* {info} */}
             {/* {board.map(item => item.element)} */}
           </div>
