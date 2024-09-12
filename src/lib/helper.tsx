@@ -1,5 +1,4 @@
-import { TileCopy } from "@/components/Tile copy"
-
+import { Tile } from "@/components/Tile";
 
 interface Convertor {
   moves: string[];
@@ -21,7 +20,7 @@ const convertor: Convertor = {
 
 const helpers = {
   getIndexFromPositionPrecomputed: function(){
-    const precomputed: {[key: string]: number} = {}
+    const precomputed: {[key: string]: number} = {};
 
     let c = 0
     for(let i = 8;i > 0; i--)
@@ -32,15 +31,15 @@ const helpers = {
   },
 
   getTiles: function(){
-    const tiles: JSX.Element[] = []
+    const tiles: JSX.Element[] = [];
     for(let i = 0;i < 64; i++){
-      tiles.push(<TileCopy key={i} isWhite={(i + Math.floor(i/8)) % 2 == 0}/>)
+      tiles.push(<Tile key={i} isWhite={(i + Math.floor(i/8)) % 2 == 0}/>);
     }
     return tiles; 
   },
 
   getPieces: function(){
-    const pieces: NewPiece[] = [
+    const pieces: Piece[] = [
       // White pieces
       { isWhite: true, position: 'a1', type: 'rook' },
       { isWhite: true, position: 'b1', type: 'knight' },
@@ -95,28 +94,28 @@ const helpers = {
   },
   
   getIndexFromPosition: function(position: string){
-    return ((position.charCodeAt(0) - 97) + (8 * (8 - parseInt(position[1]))))
+    return ((position.charCodeAt(0) - 97) + (8 * (8 - parseInt(position[1]))));
   },
 
   getPositionFromIndex: function(index: number){
-    return this.getPositionFromRowAndCol(index % 8,Math.floor(index / 8))
+    return this.getPositionFromRowAndCol(index % 8,Math.floor(index / 8));
   },
 
   getRowAndColFromPosition: function(position: string) {
-    return {row: 8 - parseInt(position[1]), col: position.charCodeAt(0) - 'a'.charCodeAt(0)}
+    return {row: 8 - parseInt(position[1]), col: position.charCodeAt(0) - 'a'.charCodeAt(0)};
   },
 
   getRowAndColFromIndex: function(position: number) {
-    return {row: Math.floor(position / 8), col: position % 8}
+    return {row: Math.floor(position / 8), col: position % 8};
   },
 
   getPositionFromRowAndCol: function(row: number, col: number){
-    return (convertor.moves[row] + "" + (8-col))
+    return (convertor.moves[row] + "" + (8-col));
   },
 
   getPieceTypeFromFEN: function(FEN: string){
     return convertor.fenToPiece[FEN.toLowerCase()];
-  }
+  },
 }
 
 export default helpers;

@@ -1,13 +1,13 @@
 import helpers from '@/lib/helper';
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
 interface MoveHintProps {
-  type: string
-  position: number
+  type: string;
+  position: number;
 }
 
 export const MoveHint = ({type, position} : MoveHintProps) => {
-  let convertedPosition = helpers.getRowAndColFromIndex(position)
+  let convertedPosition = helpers.getRowAndColFromIndex(position);
 
   const top = `${convertedPosition.row * 12.5}%`;
   const left = `${convertedPosition.col * 12.5}%`;
