@@ -6,6 +6,8 @@ import { PieceCopy } from "./Piece copy";
 import { MoveHint } from "./Hint";
 
 export const ChessBoard = () => {
+  const verticalLabels = "87654321".split("");
+  const horizontalLabels = "abcdefgh".split("");
 
   const [startPosition,setStartPostion] = useState("e6")
   const [targetPosition,setTargetPosition] = useState("e6")
@@ -32,7 +34,6 @@ export const ChessBoard = () => {
     sideSize = ChessBoard?.clientHeight! / 8;
     x = rect?.left ?? -1;
     y = rect?.top ?? -1;
-    console.log(ChessBoard?.clientHeight)
   };
 
   useLayoutEffect(() => {
@@ -49,7 +50,6 @@ export const ChessBoard = () => {
     if(movesData == undefined)
       return
     let targetSquares = movesData.filter(move => move.startingSquare == (helpers.getIndexFromPosition(startPosition)).toString())
-    console.log(targetSquares)
     setMoveHints(targetSquares)
   }, [startPosition])
 
@@ -126,35 +126,23 @@ export const ChessBoard = () => {
     <div>
       <div className="flex flex-row">
         <div className={cn("boardHeight","flex flex-col justify-between text-center text-white font-bold text-lg mr-2")}>
-          <div className="flex flex-col h-full justify-center">8</div>
-          <div className="flex flex-col h-full justify-center">7</div>
-          <div className="flex flex-col h-full justify-center">6</div>
-          <div className="flex flex-col h-full justify-center">5</div>
-          <div className="flex flex-col h-full justify-center">4</div>
-          <div className="flex flex-col h-full justify-center">3</div>
-          <div className="flex flex-col h-full justify-center">2</div>
-          <div className="flex flex-col h-full justify-center">1</div>
+          {verticalLabels.map((char) => (<p key={char} className="flex flex-col h-full justify-center">{char}</p>))}
         </div>
         <div>
-          <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={() => {FENtoBoard("r1bk3r/p2pBpNp/n4n2/1p1NP2P/6P1/3P4/P1P1K3/q5b1")}}>
+          <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1">
             {tiles}
-            {pieces.map(piece => <PieceCopy type={piece.type} position={piece.position} isWhite={piece.isWhite} handlers={pieceEventHandlers}/>)}
-            {moveHints?.map(hint => <MoveHint type="" position={Number(hint.targetSquare)}/>)}
+            {pieces.map(piece => <PieceCopy key={`${(piece.isWhite ? "White" : "Black")} ${piece.type} at ${piece.position}`} type={piece.type} position={piece.position} isWhite={piece.isWhite} handlers={pieceEventHandlers}/>)}
+            {moveHints?.map(hint => <MoveHint key={hint.targetSquare} type="" position={Number(hint.targetSquare)}/>)}
           </div>
-          <div className={cn("boardWidth","flex flex-row w-full justify-between text-center text-white font-bold text-lg")}>
-            <p className="w-full">a</p>
-            <p className="w-full">b</p>
-            <p className="w-full">c</p>
-            <p className="w-full">d</p>
-            <p className="w-full">e</p>
-            <p className="w-full">f</p>
-            <p className="w-full">g</p>
-            <p className="w-full">h</p>
+          <div className={cn("boardWidth","flex flex-row justify-between text-center text-white font-bold text-lg w-full")}>
+            {horizontalLabels .map((char) => (<p key={char} className="w-full">{char}</p>))}
           </div>
         </div>
       </div>
-      <p className="text-xl text-white font-bold">{startPosition + " " +  helpers.getIndexFromPosition(startPosition)}</p>
-      <p className="text-xl text-white font-bold">{targetPosition + " " +  helpers.getIndexFromPosition(targetPosition)}</p>
+      <div>
+        <p className="text-xl text-white font-bold">{startPosition + " " +  helpers.getIndexFromPosition(startPosition)}</p>
+        <p className="text-xl text-white font-bold">{targetPosition + " " +  helpers.getIndexFromPosition(targetPosition)}</p>
+      </div>
     </div>
   )
 }

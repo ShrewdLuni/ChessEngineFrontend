@@ -34,7 +34,7 @@ const helpers = {
   getTiles: function(){
     const tiles: JSX.Element[] = []
     for(let i = 0;i < 64; i++){
-      tiles.push(<TileCopy isWhite={(i + Math.floor(i/8)) % 2 == 0}/>)
+      tiles.push(<TileCopy key={i} isWhite={(i + Math.floor(i/8)) % 2 == 0}/>)
     }
     return tiles; 
   },
