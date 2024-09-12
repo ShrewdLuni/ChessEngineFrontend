@@ -1,4 +1,4 @@
-import { DragEvent, MouseEvent, useEffect, useLayoutEffect, useState } from "react";
+import { DragEvent, MouseEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
 import '../assets/board.css';
 import helpers from "../lib/helper"
 import { cn } from "@/lib/utils";
@@ -22,17 +22,8 @@ export const ChessBoard = () => {
   let handleClick = (e : MouseEvent) => {setStartPostion(getMousePosition(e))}
   const pieceEventHandlers = {handleDrag, handleDrop, handleClick}
 
-  let x: number;
-  let y: number;
-  let sideSize: number;
-
-  const updatePosition = () => {
-    let ChessBoard = document.getElementById("Board");
-    let rect = ChessBoard?.getBoundingClientRect();
-    sideSize = ChessBoard?.clientHeight! / 8;
-    x = rect?.left ?? -1;
-    y = rect?.top ?? -1;
-  };
+  const boardRef = useRef<HTMLDivElement>(null);
+  const [boardPosition, setBoardPosition] = useState({ x: 0, y: 0, sideSize: 0 });
 
   useLayoutEffect(() => {
     updatePosition()
@@ -79,6 +70,13 @@ export const ChessBoard = () => {
     };
   }, []);
 
+  const updatePosition = () => {
+    if (boardRef.current) {
+      const rect = boardRef.current.getBoundingClientRect();
+      setBoardPosition({x: rect.left,y: rect.top, sideSize: boardRef.current.clientHeight / 8});
+    }
+  };
+
   const getData = () => {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify({ message: "Get Random Int" }));
@@ -86,9 +84,10 @@ export const ChessBoard = () => {
   };
 
   function getMousePosition(e : MouseEvent | React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    const { x, y, sideSize } = boardPosition;
     const row = helpers.clamp(Math.floor((e.clientX - x) / sideSize), 0, 7)
     const col = helpers.clamp(Math.floor((e.clientY - y) / sideSize), 0, 7)
-    return(helpers.getPositionFromRowAndCol(row,col))
+    return(helpers.getPositionFromRowAndCol(row, col))
   }
   
   function move(from: string,to: string){
@@ -123,7 +122,7 @@ export const ChessBoard = () => {
           {["8", "7", "6", "5", "4", "3", "2", "1"].map((char, key) => (<p key={key} className="flex flex-col h-full justify-center">{char}</p>))}
         </div>
         <div>
-          <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1">
+          <div id="Board" ref={boardRef} className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1">
             {tiles}
             {pieces.map((piece, key) => <PieceCopy key={key} type={piece.type} position={piece.position} isWhite={piece.isWhite} handlers={pieceEventHandlers}/>)}
             {moveHints?.map((hint, key) => <MoveHint key={key} type="" position={Number(hint.targetSquare)}/>)}
