@@ -54,7 +54,7 @@ export const ChessBoard = () => {
   }, [startPosition])
 
   useEffect(() => {
-    move();
+    move(startPosition, targetPosition);
     getData();
   }, [targetPosition])
 
@@ -97,13 +97,13 @@ export const ChessBoard = () => {
     return(helpers.getPositionFromRowAndCol(row,col))
   }
   
-  function move(){
+  function move(from: string,to: string){
     setPieces(prevPieces => {
-      const pieceIndex = prevPieces.findIndex(piece => piece.position === startPosition);
+      const pieceIndex = prevPieces.findIndex(piece => piece.position === from);
       if (pieceIndex === -1) return prevPieces;
   
       return prevPieces.map((piece, index) =>
-        index === pieceIndex ? { ...piece, position: targetPosition } : piece
+        index === pieceIndex ? { ...piece, position: to } : piece
       );
     });
   }
@@ -126,16 +126,16 @@ export const ChessBoard = () => {
     <div>
       <div className="flex flex-row">
         <div className={cn("boardHeight","flex flex-col justify-between text-center text-white font-bold text-lg mr-2")}>
-          {verticalLabels.map((char) => (<p key={char} className="flex flex-col h-full justify-center">{char}</p>))}
+          {verticalLabels.map((char, key) => (<p key={key} className="flex flex-col h-full justify-center">{char}</p>))}
         </div>
         <div>
           <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1">
             {tiles}
-            {pieces.map(piece => <PieceCopy key={`${(piece.isWhite ? "White" : "Black")} ${piece.type} at ${piece.position}`} type={piece.type} position={piece.position} isWhite={piece.isWhite} handlers={pieceEventHandlers}/>)}
-            {moveHints?.map(hint => <MoveHint key={hint.targetSquare} type="" position={Number(hint.targetSquare)}/>)}
+            {pieces.map((piece, key) => <PieceCopy key={key} type={piece.type} position={piece.position} isWhite={piece.isWhite} handlers={pieceEventHandlers}/>)}
+            {moveHints?.map((hint, key) => <MoveHint key={key} type="" position={Number(hint.targetSquare)}/>)}
           </div>
           <div className={cn("boardWidth","flex flex-row justify-between text-center text-white font-bold text-lg w-full")}>
-            {horizontalLabels .map((char) => (<p key={char} className="w-full">{char}</p>))}
+            {horizontalLabels .map((char, key) => (<p key={key} className="w-full">{char}</p>))}
           </div>
         </div>
       </div>
