@@ -14,6 +14,9 @@ import blackKing from '../assets/BlackKing.png';
 
 import helpers from '@/lib/helper';
 
+import '../assets/board.css';
+import { cn } from '@/lib/utils';
+
 interface PieceProps {
   type: PieceType;
   isWhite: boolean;
@@ -36,8 +39,8 @@ export const Piece = ({type, isWhite, position, handlers} : PieceProps) => {
   const left = `${convertedPosition.col * 12.5}%`;
 
   return (
-    <div style={{top,left}} className="tile absolute bg-contain z-50" draggable onDragStart={handlers.handleDrag} onDragEnd={handlers.handleDrop} onClick={handlers.handleClick}>
-      <img src={piece} alt="pawn" className="w-full h-full aspect-square cursor-grab"/>
+    <div style={
+      {top,left,backgroundImage: `url(${piece})`,backgroundRepeat: `no-repeat`, imageRendering:`auto`}} className={cn("tile bgImage"," absolute bg-contain z-50 bg-[set piece here]")} draggable onDragStart={handlers.handleDrag} onDragEnd={handlers.handleDrop} onClick={handlers.handleClick}>
     </div>
   )
 }
