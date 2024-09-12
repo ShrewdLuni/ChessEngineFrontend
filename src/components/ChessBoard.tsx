@@ -109,31 +109,17 @@ export const ChessBoard = () => {
   }
 
   function FENtoBoard(FEN : string){
-    const fields: string[] = FEN.split(" ")
-
-    const fenToPiece:{[key: string]: PieceType} = {
-      "p" : "pawn",
-      "n" : "knight",
-      "b" : "bishop",
-      "r" : "rook",
-      "q" : "queen",
-      "k" : "king",
-    }
-
-    const temporaryPieces: NewPiece[] = []
-
+    const updatedPieces: NewPiece[] = []
     let index : number = 0;
-    const position = fields[0];
-    for (let i = 0; i < position.length; i++) {
-      if(!isNaN(Number(position.charAt(i)))){
-        index += Number(position.charAt(i));
-      }
-      else if(position.charAt(i) != "/"){
-        temporaryPieces.push({ isWhite: position.charAt(i) == position.charAt(i).toUpperCase(), position: helpers.getPositionFromIndex(index), type: fenToPiece[position.charAt(i).toLowerCase()]})
-        index++;
-      }
+    for(const char of FEN.split(" ")[0]){
+      if(char == "/")
+        continue
+      if(!isNaN(Number(char)))
+        index += Number(char)
+      else
+        updatedPieces.push({ isWhite: char == char.toUpperCase(), position: helpers.getPositionFromIndex(index++), type: helpers.getPieceTypeFromFEN(char)})
     }
-    setPieces(temporaryPieces)
+    setPieces(updatedPieces)
   }
 
   return (
@@ -150,7 +136,7 @@ export const ChessBoard = () => {
           <div className="flex flex-col h-full justify-center">1</div>
         </div>
         <div>
-          <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={() => {FENtoBoard("4kb1r/p4ppp/4q3/8/8/1B6/PPP2PPP/2KR4")}}>
+          <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1" onClick={() => {FENtoBoard("r1bk3r/p2pBpNp/n4n2/1p1NP2P/6P1/3P4/P1P1K3/q5b1")}}>
             {tiles}
             {pieces.map(piece => <PieceCopy type={piece.type} position={piece.position} isWhite={piece.isWhite} handlers={pieceEventHandlers}/>)}
             {moveHints?.map(hint => <MoveHint type="" position={Number(hint.targetSquare)}/>)}

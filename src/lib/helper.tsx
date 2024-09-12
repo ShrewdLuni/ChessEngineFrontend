@@ -1,17 +1,34 @@
 import { TileCopy } from "@/components/Tile copy"
 
-const moves = ["a","b","c","d","e","f","g","h"]
+
+interface Convertor {
+  moves: string[];
+  fenToPiece: { [key: string]: PieceType };
+}
+
+const convertor: Convertor = {
+  moves: ["a", "b", "c", "d", "e", "f", "g", "h"],
+
+  fenToPiece: {
+    "p": "pawn",
+    "n": "knight",
+    "b": "bishop",
+    "r": "rook",
+    "q": "queen",
+    "k": "king",
+  }
+};
 
 const helpers = {
   getIndexFromPositionPrecomputed: function(){
-    const convertor: {[key: string]: number} = {}
+    const precomputed: {[key: string]: number} = {}
 
     let c = 0
     for(let i = 8;i > 0; i--)
       for(let j = 0;j < 8; j++)
-        convertor[moves[j] + "" + i] = c++
+        precomputed[convertor.moves[j] + "" + i] = c++
 
-    return convertor;
+    return precomputed;
   },
 
   getTiles: function(){
@@ -77,7 +94,7 @@ const helpers = {
     return target;
   },
   
-  getIndexFromPosition: function(position: string){//O(1)
+  getIndexFromPosition: function(position: string){
     return ((position.charCodeAt(0) - 97) + (8 * (8 - parseInt(position[1]))))
   },
 
@@ -94,7 +111,11 @@ const helpers = {
   },
 
   getPositionFromRowAndCol: function(row: number, col: number){
-    return (moves[row] + "" + (8-col))
+    return (convertor.moves[row] + "" + (8-col))
+  },
+
+  getPieceTypeFromFEN: function(FEN: string){
+    return convertor.fenToPiece[FEN.toLowerCase()];
   }
 }
 
