@@ -6,31 +6,29 @@ import { PieceCopy } from "./Piece copy";
 import { MoveHint } from "./Hint";
 
 export const ChessBoard = () => {
-  const verticalLabels = "87654321".split("");
-  const horizontalLabels = "abcdefgh".split("");
-
-  const [startPosition,setStartPostion] = useState("e6")
-  const [targetPosition,setTargetPosition] = useState("e6")
-
-  let ChessBoard = document.getElementById("Board");
-  let rect = ChessBoard?.getBoundingClientRect()
-  let x: number = rect?.left ?? -1;
-  let y: number = rect?.top ?? -1;
-  let sideSize = ChessBoard?.clientHeight! / 8;
-
-  let handleDrag = (e : DragEvent) => {setStartPostion(getMousePosition(e))}
-  let handleDrop = (e : DragEvent) => {setTargetPosition(getMousePosition(e));}
-  let handleClick = (e : MouseEvent) => {setStartPostion(getMousePosition(e))}
-
-  const pieceEventHandlers = {handleDrag, handleDrop, handleClick}
-
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   const [movesData, setMovesData] = useState<{startingSquare : string, targetSquare: string}[]>()
 
+  const [tiles, setTiles] = useState(helpers.getTiles())
+  const [pieces, setPieces] = useState(helpers.getPieces())
+  const [moveHints, setMoveHints] = useState<{startingSquare:string,targetSquare: string}[]>();
+
+  const [startPosition,setStartPostion] = useState("e6")
+  const [targetPosition,setTargetPosition] = useState("e6")
+
+  let handleDrag = (e : DragEvent) => {setStartPostion(getMousePosition(e))}
+  let handleDrop = (e : DragEvent) => {setTargetPosition(getMousePosition(e));}
+  let handleClick = (e : MouseEvent) => {setStartPostion(getMousePosition(e))}
+  const pieceEventHandlers = {handleDrag, handleDrop, handleClick}
+
+  let x: number;
+  let y: number;
+  let sideSize: number;
+
   const updatePosition = () => {
-    ChessBoard = document.getElementById("Board");
-    rect = ChessBoard?.getBoundingClientRect();
+    let ChessBoard = document.getElementById("Board");
+    let rect = ChessBoard?.getBoundingClientRect();
     sideSize = ChessBoard?.clientHeight! / 8;
     x = rect?.left ?? -1;
     y = rect?.top ?? -1;
@@ -86,10 +84,6 @@ export const ChessBoard = () => {
       socket.send(JSON.stringify({ message: "Get Random Int" }));
     }
   };
-  
-  const [tiles, setTiles] = useState(helpers.getTiles())
-  const [pieces, setPieces] = useState(helpers.getPieces())
-  const [moveHints, setMoveHints] = useState<{startingSquare:string,targetSquare: string}[]>();
 
   function getMousePosition(e : MouseEvent | React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const row = helpers.clamp(Math.floor((e.clientX - x) / sideSize), 0, 7)
@@ -126,7 +120,7 @@ export const ChessBoard = () => {
     <div>
       <div className="flex flex-row">
         <div className={cn("boardHeight","flex flex-col justify-between text-center text-white font-bold text-lg mr-2")}>
-          {verticalLabels.map((char, key) => (<p key={key} className="flex flex-col h-full justify-center">{char}</p>))}
+          {["8", "7", "6", "5", "4", "3", "2", "1"].map((char, key) => (<p key={key} className="flex flex-col h-full justify-center">{char}</p>))}
         </div>
         <div>
           <div id="Board" className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1">
@@ -135,7 +129,7 @@ export const ChessBoard = () => {
             {moveHints?.map((hint, key) => <MoveHint key={key} type="" position={Number(hint.targetSquare)}/>)}
           </div>
           <div className={cn("boardWidth","flex flex-row justify-between text-center text-white font-bold text-lg w-full")}>
-            {horizontalLabels .map((char, key) => (<p key={key} className="w-full">{char}</p>))}
+            {["a", "b", "c", "d", "e", "f", "g", "h"].map((char, key) => (<p key={key} className="w-full">{char}</p>))}
           </div>
         </div>
       </div>
