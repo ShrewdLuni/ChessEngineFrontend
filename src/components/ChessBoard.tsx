@@ -1,31 +1,33 @@
-import { DragEvent, MouseEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { DragEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import '../assets/board.css';
 import helpers from "../lib/helper"
 import { cn } from "@/lib/utils";
 import { PieceCopy } from "./Piece copy";
 import { MoveHint } from "./Hint";
+import { debounce } from "lodash";
+
 
 export const ChessBoard = () => {
+  const tiles = useMemo(() => helpers.getTiles(), []);
+  const [pieces, setPieces] = useState(helpers.getPieces())
+  const [moveHints, setMoveHints] = useState<{startingSquare:string,targetSquare: string}[]>();
+
+  const [currentPosition, setCurrentPosition] = useState("e6")
+  const [targetPosition, setTargetPosition] = useState("e6")
+
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   const [movesData, setMovesData] = useState<{startingSquare : string, targetSquare: string}[]>()
 
-  const [tiles, setTiles] = useState(helpers.getTiles())
-  const [pieces, setPieces] = useState(helpers.getPieces())
-  const [moveHints, setMoveHints] = useState<{startingSquare:string,targetSquare: string}[]>();
+  const [boardPosition, setBoardPosition] = useState({ x: 0, y: 0, sideSize: 0 });
+  const boardRef = useRef<HTMLDivElement>(null);
 
-  const [startPosition,setStartPostion] = useState("e6")
-  const [targetPosition,setTargetPosition] = useState("e6")
-
-  let handleDrag = (e : DragEvent) => {setStartPostion(getMousePosition(e))}
+  let handleDrag = (e : DragEvent) => {setCurrentPosition(getMousePosition(e));}
   let handleDrop = (e : DragEvent) => {setTargetPosition(getMousePosition(e));}
-  let handleClick = (e : MouseEvent) => {setStartPostion(getMousePosition(e))}
+  let handleClick = (e : MouseEvent) => {setCurrentPosition(getMousePosition(e));}
   const pieceEventHandlers = {handleDrag, handleDrop, handleClick}
 
-  const boardRef = useRef<HTMLDivElement>(null);
-  const [boardPosition, setBoardPosition] = useState({ x: 0, y: 0, sideSize: 0 });
-
-  useLayoutEffect(() => {
+  useEffect(() => {
     updatePosition()
 
     window.addEventListener('resize', updatePosition);
@@ -38,12 +40,12 @@ export const ChessBoard = () => {
   useEffect(() => {
     if(movesData == undefined)
       return
-    let targetSquares = movesData.filter(move => move.startingSquare == (helpers.getIndexFromPosition(startPosition)).toString())
+    let targetSquares = movesData.filter(move => move.startingSquare == (helpers.getIndexFromPosition(currentPosition)).toString())
     setMoveHints(targetSquares)
-  }, [startPosition])
+  }, [currentPosition])
 
   useEffect(() => {
-    move(startPosition, targetPosition);
+    move(currentPosition, targetPosition);
     getData();
   }, [targetPosition])
 
@@ -70,12 +72,14 @@ export const ChessBoard = () => {
     };
   }, []);
 
-  const updatePosition = () => {
+  const updatePosition = debounce(() => {
+    console.log("updated")
     if (boardRef.current) {
       const rect = boardRef.current.getBoundingClientRect();
-      setBoardPosition({x: rect.left,y: rect.top, sideSize: boardRef.current.clientHeight / 8});
+      const sideSize = boardRef.current.clientHeight / 8;
+      setBoardPosition({ x: rect.left, y: rect.top, sideSize });
     }
-  };
+  }, 100);
 
   const getData = () => {
     if (socket && socket.readyState === WebSocket.OPEN) {
@@ -133,7 +137,7 @@ export const ChessBoard = () => {
         </div>
       </div>
       <div>
-        <p className="text-xl text-white font-bold">{startPosition + " " +  helpers.getIndexFromPosition(startPosition)}</p>
+        <p className="text-xl text-white font-bold">{currentPosition + " " +  helpers.getIndexFromPosition(currentPosition)}</p>
         <p className="text-xl text-white font-bold">{targetPosition + " " +  helpers.getIndexFromPosition(targetPosition)}</p>
       </div>
     </div>
