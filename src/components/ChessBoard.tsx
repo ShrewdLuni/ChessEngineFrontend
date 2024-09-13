@@ -29,9 +29,7 @@ export const ChessBoard = () => {
 
   useEffect(() => {
     updatePosition();
-
     window.addEventListener('resize', updatePosition);
-
     return () => {
       window.removeEventListener('resize', updatePosition);
     };
@@ -54,11 +52,22 @@ export const ChessBoard = () => {
   
     ws.onopen = () => {
       console.log("Connected to WebSocket");
+      ws.send(JSON.stringify({ action: "get_chess_info" }));
     };
   
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      setMovesData(data);
+
+      switch (data.action) {
+        case 'get_chess_info':
+          setMovesData(data.moves);
+          break;
+        case 'generate_random_number':
+          console.log(data.random_number);
+          break;
+        default:
+          console.log('Unknown action:', data);
+      }
     };
   
     ws.onclose = () => {
@@ -82,7 +91,13 @@ export const ChessBoard = () => {
 
   const getData = () => {
     if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({ message: "Get Random Int" }));
+      socket.send(JSON.stringify({ action: "get_chess_info"  }));
+    }
+  };
+
+  const getRandomNumber = () => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({ action: "generate_random_number" }));
     }
   };
 
