@@ -9,7 +9,7 @@ import '../assets/board.css';
 
 export const ChessBoard = () => {
   const tiles = useMemo(() => helpers.getTiles(), []);
-  const [pieces, setPieces] = useState(helpers.getPieces());
+  const [pieces, setPieces] = useState(helpers.getPiecesFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
   const [moveHints, setMoveHints] = useState<{startingSquare:string,targetSquare: string}[]>();
 
   const [currentPosition, setCurrentPosition] = useState("e6");
@@ -102,20 +102,6 @@ export const ChessBoard = () => {
         index === pieceIndex ? { ...piece, position: to } : piece
       );
     });
-  }
-
-  function FENtoBoard(FEN : string){
-    const updatedPieces: Piece[] = [];
-    let index : number = 0;
-    for(const char of FEN.split(" ")[0]){
-      if(char == "/")
-        continue;
-      if(!isNaN(Number(char)))
-        index += Number(char);
-      else
-        updatedPieces.push({ isWhite: char == char.toUpperCase(), position: helpers.getPositionFromIndex(index++), type: helpers.getPieceTypeFromFEN(char)});
-    }
-    setPieces(updatedPieces);
   }
 
   return (

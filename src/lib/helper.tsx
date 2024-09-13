@@ -116,6 +116,20 @@ const helpers = {
   getPieceTypeFromFEN: function(FEN: string){
     return convertor.fenToPiece[FEN.toLowerCase()];
   },
+
+  getPiecesFromFEN: function(FEN: string){
+    const pieces: Piece[] = [];
+    let index : number = 0;
+    for(const char of FEN.split(" ")[0]){
+      if(char == "/")
+        continue;
+      if(!isNaN(Number(char)))
+        index += Number(char);
+      else
+      pieces.push({ isWhite: char == char.toUpperCase(), position: helpers.getPositionFromIndex(index++), type: helpers.getPieceTypeFromFEN(char)});
+    }
+    return pieces;
+  },
 }
 
 export default helpers;
