@@ -38,7 +38,7 @@ export const Piece = ({type, isWhite, position, handlers} : PieceProps) => {
   return (
     <div 
       style={{top,left,backgroundImage: `url(${piece})`, imageRendering:`auto`}}
-      className="tile absolute bg-contain bg-no-repeat z-50 bg-[set piece here]" 
+      className="tile absolute bg-contain bg-no-repeat z-50" 
       draggable 
       onDragStart={handlers.handleDrag} 
       onDragEnd={handlers.handleDrop} 
