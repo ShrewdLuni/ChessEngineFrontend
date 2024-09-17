@@ -6,15 +6,15 @@ import { cn } from "@/lib/utils";
 import helpers from "../lib/helper";
 import '../assets/board.css';
 
-
 export const ChessBoard = () => {
+  const [FEN, setFEN] = useState("rnbqkbnr/8/8/8/8/8/8/RNBQKBNR w KQkq - 0 1")
+
   const tiles = useMemo(() => helpers.getTiles(), []);
-  const [pieces, setPieces] = useState(helpers.getPiecesFromFEN("rnbqkbnr/pppppppp/8/8/8/8/8/RNBQKBNR w KQkq - 0 1"));
+  const [pieces, setPieces] = useState(helpers.getPiecesFromFEN(FEN));
   const [moveHints, setMoveHints] = useState<{starting_square: string, target_square: string}[]>();
 
   const [currentPosition, setCurrentPosition] = useState("e6");
-  const [targetPosition, setTargetPosition] = useState("e6");
-
+  const [targetPosition, setTargetPosition] = useState("e6"); 
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   const [movesData, setMovesData] = useState<{starting_square: string, target_square: string}[]>();
@@ -43,8 +43,10 @@ export const ChessBoard = () => {
   }, [currentPosition])
 
   useEffect(() => {
+    if(currentPosition == targetPosition)
+      return
     move(currentPosition, targetPosition);
-    getData();
+    engineMakeMove(currentPosition, targetPosition);
   }, [targetPosition])
 
   useEffect(() => {
@@ -59,7 +61,9 @@ export const ChessBoard = () => {
       const data = JSON.parse(event.data);
 
       switch (data.action) {
-        case 'get_chess_info':
+        case 'engine_make_move':
+          console.log(helpers.getPositionFromIndex(data.engine_move.starting_square),helpers.getPositionFromIndex(data.engine_move.target_square))
+          move(helpers.getPositionFromIndex(data.engine_move.starting_square), helpers.getPositionFromIndex(data.engine_move.target_square))
           setMovesData(data.moves);
           break;
         case 'generate_random_number':
@@ -89,15 +93,9 @@ export const ChessBoard = () => {
     }
   }, 100);
 
-  const getData = () => {
+  const engineMakeMove = (from: string, to: string) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({ action: "get_chess_info"  }));
-    }
-  };
-
-  const getRandomNumber = () => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({ action: "generate_random_number" }));
+      socket.send(JSON.stringify({action: "engine_make_move", move: {starting_square: helpers.getIndexFromPosition(from), target_square: helpers.getIndexFromPosition(to)}}));
     }
   };
 
