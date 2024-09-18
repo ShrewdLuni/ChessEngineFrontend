@@ -11,7 +11,7 @@ export const ChessBoard = () => {
 
   const tiles = useMemo(() => helpers.getTiles(), []);
   const [pieces, setPieces] = useState(helpers.getPiecesFromFEN(FEN));
-  const [moveHints, setMoveHints] = useState<{starting_square: string, target_square: string}[]>();
+  const [moveHints, setMoveHints] = useState<{starting_square: string, target_square: string}[] | null>();
 
   const [currentPosition, setCurrentPosition] = useState("e6");
   const [targetPosition, setTargetPosition] = useState("e6"); 
@@ -36,10 +36,8 @@ export const ChessBoard = () => {
   }, []);
 
   useEffect(() => {
-    if(movesData == undefined){
-      engineGetLegalMoves();
+    if(movesData == undefined)
       return
-    }
     let targetSquares = movesData.filter(move => move.starting_square == (helpers.getIndexFromPosition(currentPosition)).toString());
     setMoveHints(targetSquares);
   }, [currentPosition])
@@ -49,6 +47,7 @@ export const ChessBoard = () => {
       return
     move(currentPosition, targetPosition);
     engineMakeMove(currentPosition, targetPosition);
+    setMoveHints(null)
   }, [targetPosition])
 
   useEffect(() => {
@@ -56,7 +55,7 @@ export const ChessBoard = () => {
   
     ws.onopen = () => {
       console.log("Connected to WebSocket");
-      ws.send(JSON.stringify({ action: "get_chess_info" }));
+      ws.send(JSON.stringify({ action: "engine_get_legal_moves" }));
     };
   
     ws.onmessage = (event) => {
@@ -67,8 +66,8 @@ export const ChessBoard = () => {
           setMovesData(data.moves)
           break;
         case 'engine_make_move':
+          ws.send(JSON.stringify({ action: "engine_get_legal_moves" }));
           move(helpers.getPositionFromIndex(data.engine_move.starting_square), helpers.getPositionFromIndex(data.engine_move.target_square))
-          engineGetLegalMoves();
           break;
         default:
           console.log('Unknown action:', data);
@@ -96,7 +95,7 @@ export const ChessBoard = () => {
 
   const engineGetLegalMoves = () => {
     if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({action: "engine_get_legal_moves"}));
+      socket.send(JSON.stringify({ action: "engine_get_legal_moves" }));
     }
   };
 
