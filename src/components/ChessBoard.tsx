@@ -36,8 +36,10 @@ export const ChessBoard = () => {
   }, []);
 
   useEffect(() => {
-    if(movesData == undefined)
+    if(movesData == undefined){
+      engineGetLegalMoves();
       return
+    }
     let targetSquares = movesData.filter(move => move.starting_square == (helpers.getIndexFromPosition(currentPosition)).toString());
     setMoveHints(targetSquares);
   }, [currentPosition])
@@ -61,13 +63,12 @@ export const ChessBoard = () => {
       const data = JSON.parse(event.data);
 
       switch (data.action) {
-        case 'engine_make_move':
-          console.log(helpers.getPositionFromIndex(data.engine_move.starting_square),helpers.getPositionFromIndex(data.engine_move.target_square))
-          move(helpers.getPositionFromIndex(data.engine_move.starting_square), helpers.getPositionFromIndex(data.engine_move.target_square))
-          setMovesData(data.moves);
+        case 'engine_get_legal_moves':
+          setMovesData(data.moves)
           break;
-        case 'generate_random_number':
-          console.log(data.random_number);
+        case 'engine_make_move':
+          move(helpers.getPositionFromIndex(data.engine_move.starting_square), helpers.getPositionFromIndex(data.engine_move.target_square))
+          engineGetLegalMoves();
           break;
         default:
           console.log('Unknown action:', data);
@@ -92,6 +93,12 @@ export const ChessBoard = () => {
       setBoardPosition({ x: rect.left, y: rect.top, sideSize });
     }
   }, 100);
+
+  const engineGetLegalMoves = () => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({action: "engine_get_legal_moves"}));
+    }
+  };
 
   const engineMakeMove = (from: string, to: string) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
