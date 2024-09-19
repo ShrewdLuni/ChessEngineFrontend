@@ -7,10 +7,8 @@ import helpers from "../lib/helper";
 import '../assets/board.css';
 
 export const ChessBoard = () => {
-  const [FEN, setFEN] = useState("rnbqkbnr/8/8/8/8/8/8/RNBQKBNR w KQkq - 0 1")
-
   const tiles = useMemo(() => helpers.getTiles(), []);
-  const [pieces, setPieces] = useState(helpers.getPiecesFromFEN(FEN));
+  const [pieces, setPieces] = useState(helpers.getPiecesFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
   const [moveHints, setMoveHints] = useState<{starting_square: string, target_square: string}[] | null>();
 
   const [currentPosition, setCurrentPosition] = useState("e6");
@@ -67,7 +65,7 @@ export const ChessBoard = () => {
           break;
         case 'engine_make_move':
           ws.send(JSON.stringify({ action: "engine_get_legal_moves" }));
-          move(helpers.getPositionFromIndex(data.engine_move.starting_square), helpers.getPositionFromIndex(data.engine_move.target_square))
+          updatePiecesFromFEN(data.fen)
           break;
         default:
           console.log('Unknown action:', data);
@@ -93,12 +91,6 @@ export const ChessBoard = () => {
     }
   }, 100);
 
-  const engineGetLegalMoves = () => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({ action: "engine_get_legal_moves" }));
-    }
-  };
-
   const engineMakeMove = (from: string, to: string) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify({action: "engine_make_move", move: {starting_square: helpers.getIndexFromPosition(from), target_square: helpers.getIndexFromPosition(to)}}));
@@ -110,6 +102,10 @@ export const ChessBoard = () => {
     const row = helpers.clamp(Math.floor((e.clientX - x) / sideSize), 0, 7);
     const col = helpers.clamp(Math.floor((e.clientY - y) / sideSize), 0, 7);
     return(helpers.getPositionFromRowAndCol(row, col))
+  }
+  
+  function updatePiecesFromFEN(newFEN: string) {
+    setPieces(helpers.getPiecesFromFEN(newFEN));
   }
   
   function move(from: string,to: string){
