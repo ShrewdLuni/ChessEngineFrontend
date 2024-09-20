@@ -15,7 +15,7 @@ export const ChessBoard = () => {
   const [targetPosition, setTargetPosition] = useState("e6"); 
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
-  const [movesData, setMovesData] = useState<{starting_square: string, target_square: string}[]>();
+  const [movesData, setMovesData] = useState<{starting_square: string, target_square: string, flag: number}[]>();
 
   const [boardPosition, setBoardPosition] = useState({ x: 0, y: 0, sideSize: 0 });
   const boardRef = useRef<HTMLDivElement>(null);
@@ -43,9 +43,15 @@ export const ChessBoard = () => {
   useEffect(() => {
     if(currentPosition == targetPosition)
       return
-    move(currentPosition, targetPosition);
-    engineMakeMove(currentPosition, targetPosition);
-    setMoveHints(null)
+    const foundMove = movesData?.find(move => move.starting_square == helpers.getIndexFromPosition(currentPosition).toString() && move.target_square == helpers.getIndexFromPosition(targetPosition).toString());
+    if (foundMove) {
+      move(currentPosition, targetPosition);
+      engineMakeMove(foundMove);
+      setMoveHints(null)
+    } else {
+      console.log("Not legal move was used");
+    }
+
   }, [targetPosition])
 
   useEffect(() => {
@@ -91,9 +97,9 @@ export const ChessBoard = () => {
     }
   }, 100);
 
-  const engineMakeMove = (from: string, to: string) => {
+  const engineMakeMove = (move: { starting_square: string; target_square: string; flag: number;}) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({action: "engine_make_move", move: {starting_square: helpers.getIndexFromPosition(from), target_square: helpers.getIndexFromPosition(to)}}));
+      socket.send(JSON.stringify({action: "engine_make_move", move: move}));
     }
   };
 
