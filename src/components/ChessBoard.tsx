@@ -9,13 +9,13 @@ import '../assets/board.css';
 export const ChessBoard = () => {
   const tiles = useMemo(() => helpers.getTiles(), []);
   const [pieces, setPieces] = useState(helpers.getPiecesFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
-  const [moveHints, setMoveHints] = useState<{starting_square: string, target_square: string}[] | null>();
+  const [moveHints, setMoveHints] = useState<{starting_square: number, target_square: number}[] | null>();
 
   const [currentPosition, setCurrentPosition] = useState("e6");
   const [targetPosition, setTargetPosition] = useState("e6"); 
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
-  const [movesData, setMovesData] = useState<{starting_square: string, target_square: string, flag: number}[]>();
+  const [movesData, setMovesData] = useState<Move[]>();
 
   const [boardPosition, setBoardPosition] = useState({ x: 0, y: 0, sideSize: 0 });
   const boardRef = useRef<HTMLDivElement>(null);
@@ -36,14 +36,14 @@ export const ChessBoard = () => {
   useEffect(() => {
     if(movesData == undefined)
       return
-    let targetSquares = movesData.filter(move => move.starting_square == (helpers.getIndexFromPosition(currentPosition)).toString());
+    let targetSquares = movesData.filter(move => move.starting_square == helpers.getIndexFromPosition(currentPosition));
     setMoveHints(targetSquares);
   }, [currentPosition])
 
   useEffect(() => {
     if(currentPosition == targetPosition)
       return
-    const foundMove = movesData?.find(move => move.starting_square == helpers.getIndexFromPosition(currentPosition).toString() && move.target_square == helpers.getIndexFromPosition(targetPosition).toString());
+    const foundMove = movesData?.find(move => move.starting_square == helpers.getIndexFromPosition(currentPosition) && move.target_square == helpers.getIndexFromPosition(targetPosition));
     if (foundMove) {
       move(currentPosition, targetPosition);
       engineMakeMove(foundMove);
@@ -97,7 +97,7 @@ export const ChessBoard = () => {
     }
   }, 100);
 
-  const engineMakeMove = (move: { starting_square: string; target_square: string; flag: number;}) => {
+  const engineMakeMove = (move: Move) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify({action: "engine_make_move", move: move}));
     }
@@ -135,7 +135,7 @@ export const ChessBoard = () => {
           <div id="Board" ref={boardRef} className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1">
             {tiles}
             {pieces.map((piece, key) => <Piece key={key} type={piece.type} position={piece.position} isWhite={piece.isWhite} handlers={pieceEventHandlers}/>)}
-            {moveHints?.map((hint, key) => <MoveHint key={key} type="" position={Number(hint.target_square)}/>)}
+            {moveHints?.map((hint, key) => <MoveHint key={key} type="" index={hint.target_square}/>)}
           </div>
           <div className={cn("boardWidth","flex flex-row justify-between text-center text-white font-bold text-lg w-full")}>
             {["a", "b", "c", "d", "e", "f", "g", "h"].map((char, key) => (<p key={key} className="w-full">{char}</p>))}

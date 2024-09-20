@@ -9,4 +9,10 @@ type MoveHint = {
   position: string;
 };
 
+type Move = {
+  starting_square: number;
+  target_square: number;
+  flag: number;
+}
+
 type PieceType = "pawn" | "knight" | "bishop" | "rook" | "queen" | "king";
