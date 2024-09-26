@@ -8,7 +8,7 @@ import '../assets/board.css';
 
 export const ChessBoard = () => {
   const tiles = useMemo(() => helpers.getTiles(), []);
-  const [pieces, setPieces] = useState(helpers.getPiecesFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
+  const [pieces, setPieces] = useState(helpers.getPiecesFromFEN("4k3/pppppppp/8/8/8/8/PPPPPPPP/3QK3 w KQkq - 0 1"));
   const [moveHints, setMoveHints] = useState<{starting_square: number, target_square: number}[] | null>();
 
   const [currentPosition, setCurrentPosition] = useState("e6");
@@ -38,6 +38,7 @@ export const ChessBoard = () => {
       return
     let targetSquares = movesData.filter(move => move.starting_square == helpers.getIndexFromPosition(currentPosition));
     setMoveHints(targetSquares);
+    console.log(targetSquares)
   }, [currentPosition])
 
   useEffect(() => {
@@ -73,6 +74,7 @@ export const ChessBoard = () => {
           ws.send(JSON.stringify({ action: "engine_get_legal_moves" }));
           updatePiecesFromFEN(data.fen)
           break;
+        
         default:
           console.log('Unknown action:', data);
       }
@@ -113,6 +115,12 @@ export const ChessBoard = () => {
   function updatePiecesFromFEN(newFEN: string) {
     setPieces(helpers.getPiecesFromFEN(newFEN));
   }
+
+  function unMakeMove(){
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({action: "engine_unmake_move"}));
+    }
+  }
   
   function move(from: string,to: string){
     setPieces(prevPieces => {
@@ -143,6 +151,7 @@ export const ChessBoard = () => {
         </div>
       </div>
       <div>
+        <p className="text-xl text-black font-bold border-solid border-4 border-white p-2 bg-white hover:bg-gray-500 transition-all duration-200" onClick={() => {unMakeMove()}}>undo</p>
         <p className="text-xl text-white font-bold">{currentPosition + " " +  helpers.getIndexFromPosition(currentPosition)}</p>
         <p className="text-xl text-white font-bold">{targetPosition + " " +  helpers.getIndexFromPosition(targetPosition)}</p>
       </div>
