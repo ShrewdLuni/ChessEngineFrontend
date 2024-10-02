@@ -5,10 +5,11 @@ import { MoveHint } from "./Hint";
 import { cn } from "@/lib/utils";
 import helpers from "../lib/helper";
 import '../assets/board.css';
+import moveSound from '../assets/sounds/move.mp3';
 
 export const ChessBoard = () => {
   const tiles = useMemo(() => helpers.getTiles(), []);
-  const [pieces, setPieces] = useState(helpers.getPiecesFromFEN("4k3/pppppppp/8/8/8/8/PPPPPPPP/3QK3 w KQkq - 0 1"));
+  const [pieces, setPieces] = useState(helpers.getPiecesFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
   const [moveHints, setMoveHints] = useState<{starting_square: number, target_square: number}[] | null>();
 
   const [currentPosition, setCurrentPosition] = useState("e6");
@@ -45,6 +46,7 @@ export const ChessBoard = () => {
     if(currentPosition == targetPosition)
       return
     const foundMove = movesData?.find(move => move.starting_square == helpers.getIndexFromPosition(currentPosition) && move.target_square == helpers.getIndexFromPosition(targetPosition));
+
     if (foundMove) {
       move(currentPosition, targetPosition);
       engineMakeMove(foundMove);
@@ -113,6 +115,8 @@ export const ChessBoard = () => {
   }
   
   function updatePiecesFromFEN(newFEN: string) {
+    const sound = new Audio(moveSound);
+    sound.play();
     setPieces(helpers.getPiecesFromFEN(newFEN));
   }
 
@@ -122,7 +126,9 @@ export const ChessBoard = () => {
     }
   }
   
-  function move(from: string,to: string){
+  function move(from: string,to: string, flag: number  = 0){
+    const sound = new Audio(moveSound);
+    sound.play();
     setPieces(prevPieces => {
       const pieceIndex = prevPieces.findIndex(piece => piece.position === from);
       if (pieceIndex === -1) return prevPieces;
