@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import helpers from "../lib/helper";
 import '../assets/board.css';
 import moveSound from '../assets/sounds/move.mp3';
+import captureSound from '../assets/sounds/capture.mp3'
 
 export const ChessBoard = () => {
   const tiles = useMemo(() => helpers.getTiles(), []);
@@ -39,7 +40,6 @@ export const ChessBoard = () => {
       return
     let targetSquares = movesData.filter(move => move.starting_square == helpers.getIndexFromPosition(currentPosition));
     setMoveHints(targetSquares);
-    console.log(targetSquares)
   }, [currentPosition])
 
   useEffect(() => {
@@ -117,8 +117,7 @@ export const ChessBoard = () => {
   }
   
   function updatePiecesFromFEN(newFEN: string) {
-    const sound = new Audio(moveSound);
-    sound.play();
+    playSound(moveSound)
     setPieces(helpers.getPiecesFromFEN(newFEN));
   }
 
@@ -129,17 +128,21 @@ export const ChessBoard = () => {
   }
   
   function move(from: string,to: string, flag: number  = 0){
-    const sound = new Audio(moveSound);
-    sound.play();
     setPieces(prevPieces => {
       const pieceIndex = prevPieces.findIndex(piece => piece.position === from);
       if (pieceIndex === -1) return prevPieces;
-  
+      const captureIndex = prevPieces.findIndex(piece => piece.position == to);
+      playSound(captureIndex == -1 ? moveSound : captureSound)
       return prevPieces.map((piece, index) =>
         index === pieceIndex ? { ...piece, position: to } : piece
       );
     });
   }
+
+  const playSound = debounce((source : string) => {
+    const sound = new Audio(source);
+    sound.play();
+  }, 100);
 
   return (
     <div>
