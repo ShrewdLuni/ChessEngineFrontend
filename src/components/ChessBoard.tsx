@@ -43,6 +43,8 @@ export const ChessBoard = () => {
   }, [currentPosition])
 
   useEffect(() => {
+    if(targetPosition == "a0")
+      return
     if(currentPosition == targetPosition)
       return
     const foundMove = movesData?.find(move => move.starting_square == helpers.getIndexFromPosition(currentPosition) && move.target_square == helpers.getIndexFromPosition(targetPosition));
@@ -54,7 +56,7 @@ export const ChessBoard = () => {
     } else {
       console.log("Not legal move was used");
     }
-
+    setTargetPosition("a0")
   }, [targetPosition])
 
   useEffect(() => {
