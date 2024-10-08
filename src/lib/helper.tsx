@@ -38,50 +38,6 @@ const helpers = {
     return tiles; 
   },
 
-  getPieces: function(){
-    const pieces: Piece[] = [
-      // White pieces
-      { isWhite: true, position: 'a1', type: 'rook' },
-      { isWhite: true, position: 'b1', type: 'knight' },
-      { isWhite: true, position: 'c1', type: 'bishop' },
-      { isWhite: true, position: 'd1', type: 'queen' },
-      { isWhite: true, position: 'e1', type: 'king' },
-      { isWhite: true, position: 'f1', type: 'bishop' },
-      { isWhite: true, position: 'g1', type: 'knight' },
-      { isWhite: true, position: 'h1', type: 'rook' },
-      
-      // White pawns
-      { isWhite: true, position: 'a2', type: 'pawn' },
-      { isWhite: true, position: 'b2', type: 'pawn' },
-      { isWhite: true, position: 'c2', type: 'pawn' },
-      { isWhite: true, position: 'd2', type: 'pawn' },
-      { isWhite: true, position: 'e2', type: 'pawn' },
-      { isWhite: true, position: 'f2', type: 'pawn' },
-      { isWhite: true, position: 'g2', type: 'pawn' },
-      { isWhite: true, position: 'h2', type: 'pawn' },
-    
-      // Black pieces
-      { isWhite: false, position: 'a8', type: 'rook' },
-      { isWhite: false, position: 'b8', type: 'knight' },
-      { isWhite: false, position: 'c8', type: 'bishop' },
-      { isWhite: false, position: 'd8', type: 'queen' },
-      { isWhite: false, position: 'e8', type: 'king' },
-      { isWhite: false, position: 'f8', type: 'bishop' },
-      { isWhite: false, position: 'g8', type: 'knight' },
-      { isWhite: false, position: 'h8', type: 'rook' },
-    
-      // Black pawns
-      { isWhite: false, position: 'a7', type: 'pawn' },
-      { isWhite: false, position: 'b7', type: 'pawn' },
-      { isWhite: false, position: 'c7', type: 'pawn' },
-      { isWhite: false, position: 'd7', type: 'pawn' },
-      { isWhite: false, position: 'e7', type: 'pawn' },
-      { isWhite: false, position: 'f7', type: 'pawn' },
-      { isWhite: false, position: 'g7', type: 'pawn' },
-      { isWhite: false, position: 'h7', type: 'pawn' },
-    ];
-    return pieces;
-  },
 
   clamp: function(target:number, min:number, max:number){
     if(target < min){
