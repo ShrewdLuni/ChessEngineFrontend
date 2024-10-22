@@ -22,6 +22,8 @@ export const ChessBoard = () => {
   const [boardPosition, setBoardPosition] = useState({ x: 0, y: 0, sideSize: 0 });
   const boardRef = useRef<HTMLDivElement>(null);
 
+  const [isGameOver, setIsGameOver] = useState(true)
+
   let handleDrag = (e : DragEvent) => {setCurrentPosition(getMousePosition(e));}
   let handleDrop = (e : DragEvent) => {setTargetPosition(getMousePosition(e));}
   let handleClick = (e : MouseEvent) => {setCurrentPosition(getMousePosition(e));}
@@ -78,7 +80,9 @@ export const ChessBoard = () => {
           ws.send(JSON.stringify({ action: "engine_get_legal_moves" }));
           updatePiecesFromFEN(data.fen)
           break;
-        
+        case 'engine_game_over':
+          setIsGameOver(true)
+          break;
         default:
           console.log('Unknown action:', data);
       }
@@ -146,6 +150,12 @@ export const ChessBoard = () => {
 
   return (
     <div>
+      {isGameOver && 
+        <div className="text-white text-2xl absolute z-[9999] bg-black p-8 rounded-xl top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+          Game Over
+          <p className="text-xl text-black font-bold border-solid border-4 border-white p-2 bg-white rounded-xl hover:bg-gray-500 transition-all duration-200" onClick={() => {unMakeMove()}}>Play Again</p>
+        </div>
+      }
       <div className="flex flex-row">
         <div className={cn("boardHeight","flex flex-col justify-between text-center text-white font-bold text-lg mr-2")}>
           {["8", "7", "6", "5", "4", "3", "2", "1"].map((char, key) => (<p key={key} className="flex flex-col h-full justify-center">{char}</p>))}
