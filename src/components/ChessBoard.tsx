@@ -7,6 +7,7 @@ import helpers from "../lib/helper";
 import '../assets/board.css';
 import moveSound from '../assets/sounds/move.mp3';
 import captureSound from '../assets/sounds/capture.mp3'
+import { useWebSocket } from "@/hooks/useWebSocket";
 
 export const ChessBoard = () => {
   const tiles = useMemo(() => helpers.getTiles(), []);
@@ -15,14 +16,15 @@ export const ChessBoard = () => {
 
   const [currentPosition, setCurrentPosition] = useState("e6");
   const [targetPosition, setTargetPosition] = useState("e6"); 
-  const [socket, setSocket] = useState<WebSocket | null>(null);
 
   const [movesData, setMovesData] = useState<Move[]>();
 
   const [boardPosition, setBoardPosition] = useState({ x: 0, y: 0, sideSize: 0 });
   const boardRef = useRef<HTMLDivElement>(null);
 
-  const [isGameOver, setIsGameOver] = useState(true)
+  const [isGameOver, setIsGameOver] = useState(false)
+
+  const socket = useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver})
 
   let handleDrag = (e : DragEvent) => {setCurrentPosition(getMousePosition(e));}
   let handleDrop = (e : DragEvent) => {setTargetPosition(getMousePosition(e));}
@@ -60,44 +62,6 @@ export const ChessBoard = () => {
     }
     setTargetPosition("a0")
   }, [targetPosition])
-
-  useEffect(() => {
-    const ws = new WebSocket("ws://127.0.0.1:8000/ws/chess/");
-  
-    ws.onopen = () => {
-      console.log("Connected to WebSocket");
-      ws.send(JSON.stringify({ action: "engine_get_legal_moves" }));
-    };
-  
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-
-      switch (data.action) {
-        case 'engine_get_legal_moves':
-          setMovesData(data.moves)
-          break;
-        case 'engine_make_move':
-          ws.send(JSON.stringify({ action: "engine_get_legal_moves" }));
-          updatePiecesFromFEN(data.fen)
-          break;
-        case 'engine_game_over':
-          setIsGameOver(true)
-          break;
-        default:
-          console.log('Unknown action:', data);
-      }
-    };
-  
-    ws.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
-  
-    setSocket(ws);
-  
-    return () => {
-      ws.close();
-    };
-  }, []);
 
   const updatePosition = debounce(() => {
     if (boardRef.current) {
