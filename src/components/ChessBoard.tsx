@@ -2,7 +2,7 @@ import { DragEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "rea
 import { debounce } from "lodash";
 import { Piece } from "./Piece";
 import { MoveHint } from "./Hint";
-import { cn } from "@/lib/utils";
+import { cn, playSound } from "@/lib/utils";
 import helpers from "../lib/helper";
 import '../assets/board.css';
 import moveSound from '../assets/sounds/move.mp3';
@@ -106,11 +106,6 @@ export const ChessBoard = () => {
       );
     });
   }
-
-  const playSound = debounce((source : string) => {
-    const sound = new Audio(source);
-    sound.play();
-  }, 100);
 
   return (
     <div>
