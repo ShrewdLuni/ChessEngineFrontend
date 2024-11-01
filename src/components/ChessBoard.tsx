@@ -24,7 +24,7 @@ export const ChessBoard = () => {
 
   const [isGameOver, setIsGameOver] = useState(false)
 
-  const socket = useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver})
+  const socketSend = useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver})
 
   let handleDrag = (e : DragEvent) => {setCurrentPosition(getMousePosition(e));}
   let handleDrop = (e : DragEvent) => {setTargetPosition(getMousePosition(e));}
@@ -71,11 +71,6 @@ export const ChessBoard = () => {
     }
   }, 100);
 
-  const engineMakeMove = (move: Move) => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({action: "engine_make_move", move: move}));
-    }
-  };
 
   function getMousePosition(e : MouseEvent | React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const { x, y, sideSize } = boardPosition;
@@ -89,10 +84,12 @@ export const ChessBoard = () => {
     setPieces(helpers.getPiecesFromFEN(newFEN));
   }
 
+  const engineMakeMove = (move: Move) => {
+    socketSend({action: "engine_make_move", move: move})
+  };
+
   function unMakeMove(){
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({action: "engine_unmake_move"}));
-    }
+    socketSend({action: "engine_unmake_move"})
   }
   
   function move(from: string,to: string, flag: number  = 0){

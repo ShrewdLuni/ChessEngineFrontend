@@ -6,8 +6,20 @@ interface webSocketProps{
   setIsGameOver: any
 }
 
+interface WebSocketMessage {
+  action: string;
+  [key: string]: any;
+}
+
 export function useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver} : webSocketProps) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
+
+
+  const socketSend = (message: WebSocketMessage) => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify(message));
+    }
+  }
 
   useEffect(() => {
     const ws = new WebSocket("ws://127.0.0.1:8000/ws/chess/");
@@ -47,5 +59,5 @@ export function useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver} 
     };
   }, []);
 
-  return socket;
+  return socketSend;
 }
