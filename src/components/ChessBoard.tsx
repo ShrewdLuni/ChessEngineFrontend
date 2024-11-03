@@ -71,7 +71,6 @@ export const ChessBoard = () => {
     }
   }, 100);
 
-
   function getMousePosition(e : MouseEvent | React.MouseEvent<HTMLDivElement, MouseEvent>) {
     const { x, y, sideSize } = boardPosition;
     const row = helpers.clamp(Math.floor((e.clientX - x) / sideSize), 0, 7);
@@ -88,7 +87,7 @@ export const ChessBoard = () => {
     socketSend({action: "engine_make_move", move: move})
   };
 
-  function unMakeMove(){
+  const unMakeMove = () => {
     socketSend({action: "engine_unmake_move"})
   }
   
