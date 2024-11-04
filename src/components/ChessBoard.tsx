@@ -2,7 +2,7 @@ import { DragEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "rea
 import { debounce } from "lodash";
 import { Piece } from "./Piece";
 import { MoveHint } from "./Hint";
-import { cn, playSound } from "@/lib/utils";
+import { cn, playSound, getPieceEventHandlers } from "@/lib/utils";
 import helpers from "../lib/helper";
 import '../assets/board.css';
 import moveSound from '../assets/sounds/move.mp3';
@@ -23,13 +23,11 @@ export const ChessBoard = () => {
   const boardRef = useRef<HTMLDivElement>(null);
 
   const [isGameOver, setIsGameOver] = useState(false)
+  const [isStartScreen, setsIsStartScreen] = useState(true)
 
   const socketSend = useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver})
 
-  let handleDrag = (e : DragEvent) => {setCurrentPosition(getMousePosition(e));}
-  let handleDrop = (e : DragEvent) => {setTargetPosition(getMousePosition(e));}
-  let handleClick = (e : MouseEvent) => {setCurrentPosition(getMousePosition(e));}
-  const pieceEventHandlers = {handleDrag, handleDrop, handleClick};
+  const pieceEventHandlers = getPieceEventHandlers(setCurrentPosition,setTargetPosition,boardPosition)
 
   useEffect(() => {
     updatePosition();
@@ -71,13 +69,6 @@ export const ChessBoard = () => {
     }
   }, 100);
 
-  function getMousePosition(e : MouseEvent | React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    const { x, y, sideSize } = boardPosition;
-    const row = helpers.clamp(Math.floor((e.clientX - x) / sideSize), 0, 7);
-    const col = helpers.clamp(Math.floor((e.clientY - y) / sideSize), 0, 7);
-    return(helpers.getPositionFromRowAndCol(row, col))
-  }
-  
   function updatePiecesFromFEN(newFEN: string) {
     playSound(moveSound)
     setPieces(helpers.getPiecesFromFEN(newFEN));
@@ -105,12 +96,6 @@ export const ChessBoard = () => {
 
   return (
     <div>
-      {isGameOver && 
-        <div className="text-white text-2xl absolute z-[9999] bg-black p-8 rounded-xl top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
-          Game Over
-          <p className="text-xl text-black font-bold border-solid border-4 border-white p-2 bg-white rounded-xl hover:bg-gray-500 transition-all duration-200" onClick={() => {unMakeMove()}}>Play Again</p>
-        </div>
-      }
       <div className="flex flex-row">
         <div className={cn("boardHeight","flex flex-col justify-between text-center text-white font-bold text-lg mr-2")}>
           {["8", "7", "6", "5", "4", "3", "2", "1"].map((char, key) => (<p key={key} className="flex flex-col h-full justify-center">{char}</p>))}
