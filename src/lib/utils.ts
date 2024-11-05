@@ -13,7 +13,6 @@ export const playSound = debounce((source : string) => {
 }, 100);
 
 function getMousePosition(e : MouseEvent | DragEvent | React.MouseEvent<HTMLDivElement, MouseEvent>, boardPosition: any) {
-  console.log("hellow,me")
   const { x, y, sideSize } = boardPosition;
   const row = helpers.clamp(Math.floor((e.clientX - x) / sideSize), 0, 7);
   const col = helpers.clamp(Math.floor((e.clientY - y) / sideSize), 0, 7);
