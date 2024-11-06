@@ -8,6 +8,7 @@ import '../assets/board.css';
 import moveSound from '../assets/sounds/move.mp3';
 import captureSound from '../assets/sounds/capture.mp3'
 import { useWebSocket } from "@/hooks/useWebSocket";
+import { useBoardPosition } from "@/hooks/useBoardPosition";
 
 export const ChessBoard = () => {
   const tiles = useMemo(() => helpers.getTiles(), []);
@@ -19,8 +20,8 @@ export const ChessBoard = () => {
 
   const [movesData, setMovesData] = useState<Move[]>();
 
-  const [boardPosition, setBoardPosition] = useState({ x: 0, y: 0, sideSize: 0 });
   const boardRef = useRef<HTMLDivElement>(null);
+  const boardPosition = useBoardPosition(boardRef); 
 
   const [isGameOver, setIsGameOver] = useState(false)
   const [isStartScreen, setsIsStartScreen] = useState(true)
@@ -28,14 +29,6 @@ export const ChessBoard = () => {
   const socketSend = useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver})
 
   const pieceEventHandlers = getPieceEventHandlers(setCurrentPosition,setTargetPosition,boardPosition)
-
-  useEffect(() => {
-    updatePosition();
-    window.addEventListener('resize', updatePosition);
-    return () => {
-      window.removeEventListener('resize', updatePosition);
-    };
-  }, []);
 
   useEffect(() => {
     if(movesData == undefined)
@@ -60,14 +53,6 @@ export const ChessBoard = () => {
     }
     setTargetPosition("a0")
   }, [targetPosition])
-
-  const updatePosition = debounce(() => {
-    if (boardRef.current) {
-      const rect = boardRef.current.getBoundingClientRect();
-      const sideSize = boardRef.current.clientHeight / 8;
-      setBoardPosition({ x: rect.left, y: rect.top, sideSize });
-    }
-  }, 100);
 
   function updatePiecesFromFEN(newFEN: string) {
     playSound(moveSound)
