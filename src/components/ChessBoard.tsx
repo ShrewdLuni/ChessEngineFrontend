@@ -1,12 +1,10 @@
-import { DragEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
-import { debounce } from "lodash";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Piece } from "./Piece";
 import { MoveHint } from "./Hint";
-import { cn, playSound, getPieceEventHandlers } from "@/lib/utils";
+import { cn, playSound, getPieceEventHandlers, getMoveFunction } from "@/lib/utils";
 import helpers from "../lib/helper";
 import '../assets/board.css';
 import moveSound from '../assets/sounds/move.mp3';
-import captureSound from '../assets/sounds/capture.mp3'
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { useBoardPosition } from "@/hooks/useBoardPosition";
 
@@ -29,6 +27,8 @@ export const ChessBoard = () => {
   const socketSend = useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver})
 
   const pieceEventHandlers = getPieceEventHandlers(setCurrentPosition,setTargetPosition,boardPosition)
+
+  const move = getMoveFunction(setPieces)
 
   useEffect(() => {
     if(movesData == undefined)
@@ -67,18 +67,6 @@ export const ChessBoard = () => {
     socketSend({action: "engine_unmake_move"})
   }
   
-  function move(from: string,to: string, flag: number  = 0){
-    setPieces(prevPieces => {
-      const pieceIndex = prevPieces.findIndex(piece => piece.position === from);
-      if (pieceIndex === -1) return prevPieces;
-      const captureIndex = prevPieces.findIndex(piece => piece.position == to);
-      playSound(captureIndex == -1 ? moveSound : captureSound)
-      return prevPieces.map((piece, index) =>
-        index === pieceIndex ? { ...piece, position: to } : piece
-      );
-    });
-  }
-
   return (
     <div>
       <div className="flex flex-row">

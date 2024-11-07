@@ -2,6 +2,8 @@ import { type ClassValue, clsx } from "clsx"
 import { debounce } from "lodash";
 import { twMerge } from "tailwind-merge"
 import helpers from "./helper";
+import moveSound from '../assets/sounds/move.mp3';
+import captureSound from '../assets/sounds/capture.mp3'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -24,4 +26,19 @@ export const getPieceEventHandlers = (setCurrentPosition : any, setTargetPositio
   let handleDrop = (e : DragEvent) => {setTargetPosition(getMousePosition(e, boardPosition));}
   let handleClick = (e : MouseEvent) => {setCurrentPosition(getMousePosition(e, boardPosition));}
   return {handleDrag, handleDrop, handleClick};
+}
+
+export function getMoveFunction(setPieces: React.Dispatch<React.SetStateAction<Piece[]>>){
+  let move = (from: string,to: string, flag: number  = 0) => {
+    setPieces(prevPieces => {
+      const pieceIndex = prevPieces.findIndex(piece => piece.position === from);
+      if (pieceIndex === -1) return prevPieces;
+      const captureIndex = prevPieces.findIndex(piece => piece.position == to);
+      playSound(captureIndex == -1 ? moveSound : captureSound)
+      return prevPieces.map((piece, index) =>
+        index === pieceIndex ? { ...piece, position: to } : piece
+      );
+    });
+  }
+  return move
 }
