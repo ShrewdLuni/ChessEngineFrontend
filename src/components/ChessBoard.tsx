@@ -24,7 +24,7 @@ export const ChessBoard = () => {
   const [isGameOver, setIsGameOver] = useState(false)
   const [isStartScreen, setsIsStartScreen] = useState(true)
 
-  const socketSend = useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver})
+  const websocket = useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver})
 
   const pieceEventHandlers = getPieceEventHandlers(setCurrentPosition,setTargetPosition,boardPosition)
 
@@ -46,7 +46,7 @@ export const ChessBoard = () => {
 
     if (foundMove) {
       move(currentPosition, targetPosition);
-      engineMakeMove(foundMove);
+      websocket.engineMakeMove(foundMove)
       setMoveHints(null)
     } else {
       console.log("Not legal move was used");
@@ -59,14 +59,6 @@ export const ChessBoard = () => {
     setPieces(helpers.getPiecesFromFEN(newFEN));
   }
 
-  const engineMakeMove = (move: Move) => {
-    socketSend({action: "engine_make_move", move: move})
-  };
-
-  const unMakeMove = () => {
-    socketSend({action: "engine_unmake_move"})
-  }
-  
   return (
     <div>
       <div className="flex flex-row">
@@ -85,7 +77,7 @@ export const ChessBoard = () => {
         </div>
       </div>
       <div>
-        {/* <p className="text-xl text-black font-bold border-solid border-4 border-white p-2 bg-white hover:bg-gray-500 transition-all duration-200" onClick={() => {unMakeMove()}}>undo</p> */}
+        <p className="text-xl text-black font-bold border-solid border-4 border-white p-2 bg-white hover:bg-gray-500 transition-all duration-200" onClick={() => {websocket.unMakeMove()}}>undo</p>
         {/* <p className="text-xl text-white font-bold">{currentPosition + " " +  helpers.getIndexFromPosition(currentPosition)}</p> */}
         {/* <p className="text-xl text-white font-bold">{targetPosition + " " +  helpers.getIndexFromPosition(targetPosition)}</p> */}
       </div>

@@ -14,7 +14,6 @@ interface WebSocketMessage {
 export function useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver} : webSocketProps) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
-
   const socketSend = (message: WebSocketMessage) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify(message));
@@ -59,5 +58,16 @@ export function useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver} 
     };
   }, []);
 
-  return socketSend;
+  const socketMethods = {
+    engineMakeMove: (move: Move) => {
+      socketSend({action: "engine_make_move", move: move})
+    },
+  
+    unMakeMove: () => {
+      socketSend({action: "engine_unmake_move"})
+    }
+  }
+
+
+  return socketMethods;
 }
