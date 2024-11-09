@@ -42,3 +42,11 @@ export function getMoveFunction(setPieces: React.Dispatch<React.SetStateAction<P
   }
   return move
 }
+
+export function getUpdatePiecesFromFENFunction(setPieces: React.Dispatch<React.SetStateAction<Piece[]>>){
+  let updatePiecesFromFEN = (newFEN: string) => {
+    playSound(moveSound)
+    setPieces(helpers.getPiecesFromFEN(newFEN));
+  }
+  return updatePiecesFromFEN
+}

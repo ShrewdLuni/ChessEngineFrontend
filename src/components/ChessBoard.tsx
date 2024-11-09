@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Piece } from "./Piece";
 import { MoveHint } from "./Hint";
-import { cn, playSound, getPieceEventHandlers, getMoveFunction } from "@/lib/utils";
+import { cn, playSound, getPieceEventHandlers, getMoveFunction, getUpdatePiecesFromFENFunction } from "@/lib/utils";
 import helpers from "../lib/helper";
 import '../assets/board.css';
 import moveSound from '../assets/sounds/move.mp3';
@@ -18,17 +18,18 @@ export const ChessBoard = () => {
 
   const [movesData, setMovesData] = useState<Move[]>();
 
-  const boardRef = useRef<HTMLDivElement>(null);
-  const boardPosition = useBoardPosition(boardRef); 
-
   const [isGameOver, setIsGameOver] = useState(false)
   const [isStartScreen, setsIsStartScreen] = useState(true)
 
+  const move = getMoveFunction(setPieces)
+  const updatePiecesFromFEN = getUpdatePiecesFromFENFunction(setPieces)
+
   const websocket = useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver})
 
-  const pieceEventHandlers = getPieceEventHandlers(setCurrentPosition,setTargetPosition,boardPosition)
+  const boardRef = useRef<HTMLDivElement>(null);
+  const boardPosition = useBoardPosition(boardRef); 
 
-  const move = getMoveFunction(setPieces)
+  const pieceEventHandlers = getPieceEventHandlers(setCurrentPosition,setTargetPosition,boardPosition)
 
   useEffect(() => {
     if(movesData == undefined)
@@ -54,11 +55,6 @@ export const ChessBoard = () => {
     setTargetPosition("a0")
   }, [targetPosition])
 
-  function updatePiecesFromFEN(newFEN: string) {
-    playSound(moveSound)
-    setPieces(helpers.getPiecesFromFEN(newFEN));
-  }
-
   return (
     <div>
       <div className="flex flex-row">
@@ -77,7 +73,7 @@ export const ChessBoard = () => {
         </div>
       </div>
       <div>
-        <p className="text-xl text-black font-bold border-solid border-4 border-white p-2 bg-white hover:bg-gray-500 transition-all duration-200" onClick={() => {websocket.unMakeMove()}}>undo</p>
+        {/* <p className="text-xl text-black font-bold border-solid border-4 border-white p-2 bg-white hover:bg-gray-500 transition-all duration-200" onClick={() => {websocket.unMakeMove()}}>undo</p> */}
         {/* <p className="text-xl text-white font-bold">{currentPosition + " " +  helpers.getIndexFromPosition(currentPosition)}</p> */}
         {/* <p className="text-xl text-white font-bold">{targetPosition + " " +  helpers.getIndexFromPosition(targetPosition)}</p> */}
       </div>
