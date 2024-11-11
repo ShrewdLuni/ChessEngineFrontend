@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Piece } from "./Piece";
 import { MoveHint } from "./Hint";
-import { cn, playSound, getPieceEventHandlers, getMoveFunction, getUpdatePiecesFromFENFunction } from "@/lib/utils";
-import helpers from "../lib/helper";
-import '../assets/board.css';
-import moveSound from '../assets/sounds/move.mp3';
+import { cn, getPieceEventHandlers, getMoveFunction, getUpdatePiecesFromFENFunction } from "@/lib/utils";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { useBoardPosition } from "@/hooks/useBoardPosition";
+import helpers from "../lib/helper";
+import '../assets/board.css';
 
 export const ChessBoard = () => {
   const tiles = useMemo(() => helpers.getTiles(), []);
@@ -39,9 +38,7 @@ export const ChessBoard = () => {
   }, [currentPosition])
 
   useEffect(() => {
-    if(targetPosition == "a0")
-      return
-    if(currentPosition == targetPosition)
+    if(targetPosition == "a0" || currentPosition == targetPosition)
       return
     const foundMove = movesData?.find(move => move.starting_square == helpers.getIndexFromPosition(currentPosition) && move.target_square == helpers.getIndexFromPosition(targetPosition));
 

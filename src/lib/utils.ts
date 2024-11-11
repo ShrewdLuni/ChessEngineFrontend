@@ -29,7 +29,7 @@ export const getPieceEventHandlers = (setCurrentPosition : any, setTargetPositio
 }
 
 export function getMoveFunction(setPieces: React.Dispatch<React.SetStateAction<Piece[]>>){
-  let move = (from: string,to: string, flag: number  = 0) => {
+  let move = (from: string,to: string, _flag: number  = 0) => {
     setPieces(prevPieces => {
       const pieceIndex = prevPieces.findIndex(piece => piece.position === from);
       if (pieceIndex === -1) return prevPieces;
