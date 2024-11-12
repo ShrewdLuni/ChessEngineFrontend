@@ -1,38 +1,51 @@
+:root {
+  --base-size: 60;
+  --base-h: 80;
+}
+
 .tile {
-  width: calc(80vw / 8);
-  height: calc(80vw / 8);
+  width: calc(var(--base-size) * 1vw / 8);
+  height: calc(var(--base-size) * 1vw / 8);
 }
 
 .board {
-  height: calc(80vw);
-  width: calc(80vw);
+  height: calc(var(--base-size) * 1vw);
+  width: calc(var(--base-size) * 1vw);
 }
 
 .boardHeight {
-  height: calc(80vw);
+  height: calc(var(--base-size) * 1vw);
 }
 
 .boardWidth {
-  width: calc(80vw);
+  width: calc(var(--base-size) * 1vw);
+}
+
+.boardInfo { 
+  width: calc(var(--base-size) * 1vw / 4);
 }
 
 @media (orientation: landscape) {
   .tile {
-    width: calc(80vh / 8);
-    height: calc(80vh / 8);
+    width: calc(var(--base-h) * 1vh / 8);
+    height: calc(var(--base-h) * 1vh / 8);
   }
 
   .board {
-    height: calc(80vh);
-    width: calc(80vh);
+    height: calc(var(--base-h) * 1vh);
+    width: calc(var(--base-h) * 1vh);
   }
 
   .boardHeight {
-    height: calc(80vh);
+    height: calc(var(--base-h) * 1vh);
   }
   
   .boardWidth {
-    width: calc(80vh);
+    width: calc(var(--base-h) * 1vh);
+  }
+
+  .boardInfo { 
+    width: calc(var(--base-h) * 1vh / 4);
   }
 }
 

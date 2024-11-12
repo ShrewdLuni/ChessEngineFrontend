@@ -68,6 +68,5 @@ export function useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver} 
     }
   }
 
-
   return socketMethods;
 }

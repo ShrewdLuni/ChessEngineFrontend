@@ -18,14 +18,14 @@ function getMousePosition(e : MouseEvent | DragEvent | React.MouseEvent<HTMLDivE
   const { x, y, sideSize } = boardPosition;
   const row = helpers.clamp(Math.floor((e.clientX - x) / sideSize), 0, 7);
   const col = helpers.clamp(Math.floor((e.clientY - y) / sideSize), 0, 7);
-  return(helpers.getPositionFromRowAndCol(row, col))
+  return (helpers.getPositionFromRowAndCol(row, col))
 }
 
 export const getPieceEventHandlers = (setCurrentPosition : any, setTargetPosition : any, boardPosition : any) => {
   let handleDrag = (e : DragEvent) => {setCurrentPosition(getMousePosition(e, boardPosition));}
   let handleDrop = (e : DragEvent) => {setTargetPosition(getMousePosition(e, boardPosition));}
   let handleClick = (e : MouseEvent) => {setCurrentPosition(getMousePosition(e, boardPosition));}
-  return {handleDrag, handleDrop, handleClick};
+  return { handleDrag, handleDrop, handleClick };
 }
 
 export function getMoveFunction(setPieces: React.Dispatch<React.SetStateAction<Piece[]>>){
