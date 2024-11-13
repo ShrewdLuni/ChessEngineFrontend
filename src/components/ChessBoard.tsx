@@ -55,7 +55,7 @@ export const ChessBoard = () => {
   return (
     <div>
       <div className="flex flex-row">
-        <div className={cn("boardHeight","flex flex-col justify-between text-center text-white font-bold text-lg mr-2")}>
+        <div className={cn("boardInfo","flex flex-col justify-between text-right text-white font-bold text-xs sm:text-sm lg:text-lg mr-2")}>
           {["8", "7", "6", "5", "4", "3", "2", "1"].map((char, key) => (<p key={key} className="flex flex-col h-full justify-center">{char}</p>))}
         </div>
         <div>
@@ -64,8 +64,22 @@ export const ChessBoard = () => {
             {pieces.map((piece, key) => <Piece key={key} type={piece.type} position={piece.position} isWhite={piece.isWhite} handlers={pieceEventHandlers}/>)}
             {moveHints?.map((hint, key) => <MoveHint key={key} type="" index={hint.target_square}/>)}
           </div>
-          <div className={cn("boardWidth","flex flex-row justify-between text-center text-white font-bold text-lg w-full")}>
+          {/* <div className={cn("boardWidth","flex flex-row justify-between text-center text-white font-bold text-xs sm:text-sm lg:text-lg w-full")}>
             {["a", "b", "c", "d", "e", "f", "g", "h"].map((char, key) => (<p key={key} className="w-full">{char}</p>))}
+          </div> */}
+        </div>
+        <div className={cn("boardInfo","flex flex-col justify-between text-center bg-black text-white font-bold text-sm ml-2")}>
+          <div>
+            name
+          </div>
+          <div>
+            eval info
+          </div>
+          <div>
+            moves history
+          </div>
+          <div>
+            buttons
           </div>
         </div>
       </div>
