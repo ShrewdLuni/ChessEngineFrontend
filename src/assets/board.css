@@ -1,28 +1,28 @@
 :root {
-  --base-size: 60;
+  --base-w: 80;
   --base-h: 80;
 }
 
 .tile {
-  width: calc(var(--base-size) * 1vw / 8);
-  height: calc(var(--base-size) * 1vw / 8);
+  width: calc(var(--base-w) * 1vw / 8);
+  height: calc(var(--base-w) * 1vw / 8);
 }
 
 .board {
-  height: calc(var(--base-size) * 1vw);
-  width: calc(var(--base-size) * 1vw);
+  height: calc(var(--base-w) * 1vw);
+  width: calc(var(--base-w) * 1vw);
 }
 
 .boardHeight {
-  height: calc(var(--base-size) * 1vw);
+  height: calc(var(--base-w) * 1vw);
 }
 
 .boardWidth {
-  width: calc(var(--base-size) * 1vw);
+  width: calc(var(--base-w) * 1vw);
 }
 
 .boardInfo { 
-  width: calc(var(--base-size) * 1vw / 4);
+  width: calc(var(--base-w) * 1vw / 2);
 }
 
 @media (orientation: landscape) {
@@ -45,7 +45,7 @@
   }
 
   .boardInfo { 
-    width: calc(var(--base-h) * 1vh / 4);
+    width: calc(var(--base-h) * 1vh / 2);
   }
 }
 

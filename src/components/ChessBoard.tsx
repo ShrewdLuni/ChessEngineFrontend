@@ -55,7 +55,7 @@ export const ChessBoard = () => {
   return (
     <div>
       <div className="flex flex-row">
-        <div className={cn("boardInfo","flex flex-col justify-between text-right text-white font-bold text-xs sm:text-sm lg:text-lg mr-2")}>
+        <div className={cn("flex flex-col justify-between text-right text-white font-bold text-xs sm:text-sm lg:text-lg mr-2")}>
           {["8", "7", "6", "5", "4", "3", "2", "1"].map((char, key) => (<p key={key} className="flex flex-col h-full justify-center">{char}</p>))}
         </div>
         <div>
