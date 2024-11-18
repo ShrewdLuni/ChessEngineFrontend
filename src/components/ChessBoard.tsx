@@ -6,6 +6,8 @@ import { useWebSocket } from "@/hooks/useWebSocket";
 import { useBoardPosition } from "@/hooks/useBoardPosition";
 import helpers from "../lib/helper";
 import '../assets/board.css';
+import { EvaluationBar } from "./EvaluationBar";
+import { MoveHistory } from "./MoveHistory";
 
 export const ChessBoard = () => {
   const tiles = useMemo(() => helpers.getTiles(), []);
@@ -68,25 +70,19 @@ export const ChessBoard = () => {
             {["a", "b", "c", "d", "e", "f", "g", "h"].map((char, key) => (<p key={key} className="w-full">{char}</p>))}
           </div> */}
         </div>
-        <div className={cn("boardInfo","flex flex-col justify-between text-center bg-black text-white font-bold text-sm ml-2")}>
-          <div>
-            name
+        <div className={cn("boardInfo","flex flex-col justify-start gap-2 text-center bg-[#1a1e23] text-white font-bold text-sm ml-2")}>
+          <div className="text-left font-semibold font-mono">
+            <p>Evaluation: -2.2</p>
+            <p className="text-xs font-normal">Black is winning</p>
+            <p className="text-xs font-normal">Best move: e5</p>
+            <EvaluationBar value={40}/>
+          </div>
+          <div className="">
+            <MoveHistory/>
           </div>
           <div>
-            eval info
-          </div>
-          <div>
-            moves history
-          </div>
-          <div>
-            buttons
           </div>
         </div>
-      </div>
-      <div>
-        {/* <p className="text-xl text-black font-bold border-solid border-4 border-white p-2 bg-white hover:bg-gray-500 transition-all duration-200" onClick={() => {websocket.unMakeMove()}}>undo</p> */}
-        {/* <p className="text-xl text-white font-bold">{currentPosition + " " +  helpers.getIndexFromPosition(currentPosition)}</p> */}
-        {/* <p className="text-xl text-white font-bold">{targetPosition + " " +  helpers.getIndexFromPosition(targetPosition)}</p> */}
       </div>
     </div>
   )

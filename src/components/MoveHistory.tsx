@@ -37,10 +37,10 @@ export const MoveHistory = () => {
 
   return (
     <div>
-      <p className="text-xs bg-[#1a1e23] border-[#13171b]  border-y-2">Move History</p>
+      {/* <p className="text-xs bg-[#1a1e23]">Move History</p> */}
       <div className="h-48 overflow-y-scroll no-scrollbar">
         {moveHistory.map(({ moveNumber, white, black }, index) => (
-          <div key={index} className={cn("flex flex-row font-mono font-semibold", index % 2 === 0 ? "bg-[#1a1e23]" : "bg-[#8c8fbc]")}>
+          <div key={index} className={cn("flex flex-row font-mono font-semibold", index % 2 === 0 ? "bg-[#1a1e23]" : "bg-[#1a1e23]")}>
             <div className="bg-[#1a1e23] w-8 text-left pl-1">{moveNumber}</div>
             <div className="flex-1 flex justify-start hover:bg-cyan-600">{white}</div>
             <div className="flex-1 flex justify-start hover:bg-cyan-600">{black}</div>
