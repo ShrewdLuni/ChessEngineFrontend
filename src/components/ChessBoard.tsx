@@ -16,7 +16,8 @@ export const ChessBoard = () => {
   const [currentPosition, setCurrentPosition] = useState("e6");
   const [targetPosition, setTargetPosition] = useState("e6"); 
 
-  const [evaluation, setEvaluation] = useState(50);
+  const [evaluation, setEvaluation] = useState(0);
+  const [bestMove, setBestMove] = useState("")
   const [movesHistory, setMovesHistory] = useState(null)
 
   const [movesData, setMovesData] = useState<Move[]>();
@@ -27,7 +28,7 @@ export const ChessBoard = () => {
   const move = getMoveFunction(setPieces)
   const updatePiecesFromFEN = getUpdatePiecesFromFENFunction(setPieces)
 
-  const websocket = useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver})
+  const websocket = useWebSocket({setEvaluation, setBestMove, setMovesData, updatePiecesFromFEN, setIsGameOver})
 
   const boardRef = useRef<HTMLDivElement>(null);
   const boardPosition = useBoardPosition(boardRef); 
@@ -72,7 +73,7 @@ export const ChessBoard = () => {
             {["a", "b", "c", "d", "e", "f", "g", "h"].map((char, key) => (<p key={key} className="w-full">{char}</p>))}
           </div>
         </div>
-        <Sidebar evaluation={evaluation} moveHistory={movesHistory}/>
+        <Sidebar evaluation={evaluation} bestMove={bestMove} moveHistory={movesHistory}/>
       </div>
     </div>
   )

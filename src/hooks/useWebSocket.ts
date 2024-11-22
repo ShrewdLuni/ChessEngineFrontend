@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
 interface webSocketProps{
+  setEvaluation: any,
+  setBestMove: any
   setMovesData: any
   updatePiecesFromFEN: any
   setIsGameOver: any
@@ -11,7 +13,7 @@ interface WebSocketMessage {
   [key: string]: any;
 }
 
-export function useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver} : webSocketProps) {
+export function useWebSocket({setEvaluation, setBestMove, setMovesData, updatePiecesFromFEN, setIsGameOver} : webSocketProps) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   const socketSend = (message: WebSocketMessage) => {
@@ -38,6 +40,12 @@ export function useWebSocket({setMovesData, updatePiecesFromFEN, setIsGameOver} 
         case 'engine_make_move':
           ws.send(JSON.stringify({ action: "engine_get_legal_moves" }));
           updatePiecesFromFEN(data.fen)
+          setEvaluation(data.evaluation)
+          setBestMove(data.move)
+          break;
+        case 'engine_update_evaluation':
+          console.log(data)
+          setEvaluation(data.evaluation)
           break;
         case 'engine_game_over':
           setIsGameOver(true)
