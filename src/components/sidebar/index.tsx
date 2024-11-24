@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils"
 import { EvaluationBar } from "./EvaluationBar"
 import { MoveHistory } from "./MoveHistory"
 import { Settings2 } from "lucide-react"
+import { PromotionModule } from "./promotionModule";
 
 interface SidebarProps {
   evaluation : number,
@@ -11,11 +12,9 @@ interface SidebarProps {
 
 export const Sidebar = ({evaluation, bestMove, moveHistory} : SidebarProps) => {
 
-  evaluation = -(evaluation / 100)
-
   return (
     <div>
-      <div className={cn("boardInfo","flex flex-col justify-start gap-2 text-center bg-[#1a1e23] text-white font-bold text-sm ml-2")}>
+      <div className={cn("boardInfo","flex flex-col justify-start gap-4 text-center bg-[#1a1e23] text-white font-bold text-sm ml-2")}>
         <div className="text-left font-semibold font-mono">
           <div className="flex felx-row justify-between">
             <p>Evaluation: {evaluation}</p>
@@ -27,6 +26,7 @@ export const Sidebar = ({evaluation, bestMove, moveHistory} : SidebarProps) => {
         </div>
         <MoveHistory moveHistory={moveHistory}/>
       </div>
+      <PromotionModule isWhite={false}/>
     </div>
   )
 }
