@@ -40,12 +40,11 @@ export function useWebSocket({setEvaluation, setBestMove, setMovesData, updatePi
         case 'engine_make_move':
           ws.send(JSON.stringify({ action: "engine_get_legal_moves" }));
           updatePiecesFromFEN(data.fen)
-          setEvaluation(data.evaluation)
+          setEvaluation(-(data.evaluation  / 100))
           setBestMove(data.move)
           break;
         case 'engine_update_evaluation':
-          console.log(data)
-          setEvaluation(data.evaluation)
+          setEvaluation(-(data.evaluation  / 100))
           break;
         case 'engine_game_over':
           setIsGameOver(true)
