@@ -26,7 +26,7 @@ export const Sidebar = ({evaluation, bestMove, moveHistory} : SidebarProps) => {
         </div>
         <MoveHistory moveHistory={moveHistory}/>
       </div>
-      <PromotionModule isWhite={false}/>
+      <PromotionModule isWhite={true}/>
     </div>
   )
 }
