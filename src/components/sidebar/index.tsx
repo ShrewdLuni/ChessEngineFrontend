@@ -3,6 +3,7 @@ import { EvaluationBar } from "./EvaluationBar"
 import { MoveHistory } from "./MoveHistory"
 import { Settings2 } from "lucide-react"
 import { PromotionModule } from "./promotionModule";
+import { GameSetupModule } from "./gameSetupModule";
 
 interface SidebarProps {
   evaluation : number,
@@ -14,7 +15,7 @@ export const Sidebar = ({evaluation, bestMove, moveHistory} : SidebarProps) => {
 
   return (
     <div>
-      <div className={cn("boardInfo","flex flex-col justify-start gap-4 text-center bg-[#1a1e23] text-white font-bold text-sm ml-2")}>
+      <div className={cn("boardInfo","flex flex-col justify-start gap-4 text-center bg-[#1a1e23] text-white font-bold text-sm ml-2 overflow-y-scroll no-scrollbar")}>
         <div className="text-left font-semibold font-mono">
           <div className="flex felx-row justify-between">
             <p>Evaluation: {evaluation}</p>
@@ -25,8 +26,9 @@ export const Sidebar = ({evaluation, bestMove, moveHistory} : SidebarProps) => {
           <EvaluationBar value={evaluation}/>
         </div>
         <MoveHistory moveHistory={moveHistory}/>
+        {false && <PromotionModule isWhite={true}/>}
+        {true && <GameSetupModule/>}
       </div>
-      <PromotionModule isWhite={true}/>
     </div>
   )
 }
