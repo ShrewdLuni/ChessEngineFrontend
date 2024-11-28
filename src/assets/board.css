@@ -1,6 +1,6 @@
 :root {
-  --base-w: 80;
-  --base-h: 80;
+  --base-w: 60;
+  --base-h: 60;
 }
 
 .tile {
@@ -23,6 +23,7 @@
 
 .boardInfo { 
   width: calc(var(--base-w) * 1vw / 2);
+  height: calc(var(--base-w) * 1vw);
 }
 
 @media (orientation: landscape) {
@@ -46,6 +47,7 @@
 
   .boardInfo { 
     width: calc(var(--base-h) * 1vh / 2);
+    height: calc(var(--base-w) * 1vh);
   }
 }
 
