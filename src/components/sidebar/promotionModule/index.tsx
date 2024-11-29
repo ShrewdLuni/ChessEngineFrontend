@@ -19,7 +19,7 @@ export const PromotionModule = ({ isWhite } : PromotionModuleProps) => {
   const pieces = isWhite ? [whiteRook, whiteQueen, whiteBishop, whiteKnight] : [blackRook, blackQueen, blackBishop, blackKnight];
 
   return (
-    <div className="mt-4 ml-[5%] grid grid-cols-2 grid-rows-2 gap-2 aspect-square text-white w-[60%]">
+    <div className="grid grid-cols-2 grid-rows-2 gap-2 aspect-square text-white w-[60%]">
       {pieces.map((piece, index) => <PromotionOption key={index} piece={piece}/>)}
     </div>
   )

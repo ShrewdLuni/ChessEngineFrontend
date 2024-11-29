@@ -40,7 +40,7 @@ export const MoveHistory = ({moveHistory} : MoveHistoryProps) => {
 
   return (
     <div>
-      <div className="h-48 overflow-y-scroll no-scrollbar">
+      <div className="h-16 overflow-y-scroll no-scrollbar">
         {moveHistoryDummy.map(({ white, black }, index) => (
           <div key={index} className={cn("flex flex-row font-mono font-semibold", index % 2 === 0 ? "bg-[#1a1e23]" : "bg-[#1a1e23]")}>
             <div className="bg-[#1a1e23] w-8 text-left pl-1">{index + 1}</div>
