@@ -19,6 +19,7 @@ export const ChessBoard = () => {
   const [evaluation, setEvaluation] = useState(0);
   const [bestMove, setBestMove] = useState("")
   const [movesHistory, setMovesHistory] = useState(null)
+  const [isBlack, setIsBlack] = useState(true)
 
   const [movesData, setMovesData] = useState<Move[]>();
 
@@ -35,17 +36,20 @@ export const ChessBoard = () => {
 
   const pieceEventHandlers = getPieceEventHandlers(setCurrentPosition,setTargetPosition,boardPosition)
 
+  const rank = isBlack ? ["h", "g", "f", "e", "d", "c", "b", "a"] : ["a", "b", "c", "d", "e", "f", "g", "h"];
+  const flie = isBlack ? ["1", "2", "3", "4", "5", "6", "7", "8"] : ["8", "7", "6", "5", "4", "3", "2", "1"];
+
   useEffect(() => {
     if(movesData == undefined)
       return
-    let targetSquares = movesData.filter(move => move.starting_square == helpers.getIndexFromPosition(currentPosition));
+    let targetSquares = movesData.filter(move => move.starting_square == helpers.getIndexFromPosition(currentPosition, isBlack));
     setMoveHints(targetSquares);
   }, [currentPosition])
 
   useEffect(() => {
     if(targetPosition == "a0" || currentPosition == targetPosition)
       return
-    const foundMove = movesData?.find(move => move.starting_square == helpers.getIndexFromPosition(currentPosition) && move.target_square == helpers.getIndexFromPosition(targetPosition));
+    const foundMove = movesData?.find(move => move.starting_square == helpers.getIndexFromPosition(currentPosition, isBlack) && move.target_square == helpers.getIndexFromPosition(targetPosition, isBlack));
 
     if (foundMove) {
       move(currentPosition, targetPosition);
@@ -61,7 +65,7 @@ export const ChessBoard = () => {
     <div>
       <div className="flex flex-row">
         <div className={cn("boardHeight flex flex-col justify-between text-right font-mono text-white font-bold text-xs sm:text-sm lg:text-lg mr-2")}>
-          {["8", "7", "6", "5", "4", "3", "2", "1"].map((char, key) => (<p key={key} className="flex flex-col justify-center">{char}</p>))}
+          {flie.map((char, key) => (<p key={key} className="flex flex-col justify-center">{char}</p>))}
         </div>
         <div>
           <div id="Board" ref={boardRef} className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1">
@@ -70,7 +74,7 @@ export const ChessBoard = () => {
             {moveHints?.map((hint, key) => <MoveHint key={key} type="" index={hint.target_square}/>)}
           </div>
           <div className={cn("boardWidth","flex flex-row justify-between text-center text-white font-bold font-mono text-xs sm:text-sm lg:text-lg w-full")}>
-            {["a", "b", "c", "d", "e", "f", "g", "h"].map((char, key) => (<p key={key} className="w-full">{char}</p>))}
+            {rank.map((char, key) => (<p key={key} className="w-full">{char}</p>))}
           </div>
         </div>
         <Sidebar evaluation={evaluation} bestMove={bestMove} moveHistory={movesHistory}/>
