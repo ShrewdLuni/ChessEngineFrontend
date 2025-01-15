@@ -23,21 +23,26 @@ interface PieceProps {
     handleDrop: any;
     handleClick: any;
   };
+  isBlack?: boolean;
 }
 
-export const Piece = ({type, isWhite, position, handlers} : PieceProps) => {
+export const Piece = ({type, isWhite, position, handlers, isBlack = false} : PieceProps) => {
   const white = {"pawn": whitePawn, "knight": whiteKnight, "bishop": whiteBishop, "rook": whiteRook, "queen": whiteQueen, "king": whiteKing};
   const black = {"pawn": blackPawn, "knight": blackKnight, "bishop": blackBishop, "rook": blackRook, "queen": blackQueen, "king": blackKing};
   const piece = isWhite ? white[type] : black[type];
 
   let convertedPosition = helpers.getRowAndColFromPosition(position);
+  if(isBlack){
+    convertedPosition.col = 7 - convertedPosition.col
+    convertedPosition.row = 7 - convertedPosition.row
+  }
 
   const top = `${convertedPosition.row * 12.5}%`;
   const left = `${convertedPosition.col * 12.5}%`;
 
   return (
     <div 
-      style={{top,left,backgroundImage: `url(${piece})`, imageRendering:`auto`}}
+      style={{top, left,backgroundImage: `url(${piece})`, imageRendering:`auto`}}
       className="tile absolute bg-contain bg-no-repeat z-50" 
       draggable 
       onDragStart={handlers.handleDrag} 
