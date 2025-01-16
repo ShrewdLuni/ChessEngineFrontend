@@ -26,7 +26,7 @@ export const ChessBoard = () => {
   const [isStartScreen, setsIsStartScreen] = useState(true)
 
 
-  const [isBlack, setIsBlack] = useState(false) 
+  const [isFlipped, setIsFlipped] = useState(false) 
 
   const move = getMoveFunction(setPieces)
   const updatePiecesFromFEN = getUpdatePiecesFromFENFunction(setPieces)
@@ -38,14 +38,14 @@ export const ChessBoard = () => {
 
   const pieceEventHandlers = getPieceEventHandlers(setCurrentPosition,setTargetPosition,boardPosition)
 
-  const rank = isBlack ? ["h", "g", "f", "e", "d", "c", "b", "a"] : ["a", "b", "c", "d", "e", "f", "g", "h"];
-  const flie = isBlack ? ["1", "2", "3", "4", "5", "6", "7", "8"] : ["8", "7", "6", "5", "4", "3", "2", "1"];
+  const rank = isFlipped ? ["h", "g", "f", "e", "d", "c", "b", "a"] : ["a", "b", "c", "d", "e", "f", "g", "h"];
+  const flie = isFlipped ? ["1", "2", "3", "4", "5", "6", "7", "8"] : ["8", "7", "6", "5", "4", "3", "2", "1"];
 
   useEffect(() => {
     if(movesData == undefined)
       return
     const index = helpers.getIndexFromPosition(currentPosition);
-    const targetSquares = movesData.filter(move => move.starting_square === (isBlack ? 63 - index : index));
+    const targetSquares = movesData.filter(move => move.starting_square === (isFlipped ? 63 - index : index));
     setMoveHints(targetSquares);
   }, [currentPosition])
 
@@ -55,13 +55,13 @@ export const ChessBoard = () => {
     const startIndex = helpers.getIndexFromPosition(currentPosition);
     const targetIndex = helpers.getIndexFromPosition(targetPosition);
     const foundMove = movesData?.find(move => 
-      move.starting_square === (isBlack ? 63 - startIndex : startIndex) && 
-      move.target_square === (isBlack ? 63 - targetIndex : targetIndex)
+      move.starting_square === (isFlipped ? 63 - startIndex : startIndex) && 
+      move.target_square === (isFlipped ? 63 - targetIndex : targetIndex)
     );
     
 
     if (foundMove) {
-      if(isBlack){
+      if(isFlipped){
         move(helpers.getPositionFromIndex(63 - helpers.getIndexFromPosition(currentPosition)), helpers.getPositionFromIndex(63 - helpers.getIndexFromPosition(targetPosition))); //flipped
       }
       else{
@@ -84,14 +84,14 @@ export const ChessBoard = () => {
         <div>
           <div id="Board" ref={boardRef} className="relative grid grid-rows-8 grid-cols-8 border-[#8c8fbc] border-[4px] aspect-square rounded-sm z-1">
             {tiles}
-            {pieces.map((piece, key) => <Piece key={key} type={piece.type} position={piece.position} isWhite={piece.isWhite} isBlack={isBlack} handlers={pieceEventHandlers}/>)}
-            {moveHints?.map((hint, key) => <MoveHint key={key} type="" index={hint.target_square} isBlack={isBlack}/>)}
+            {pieces.map((piece, key) => <Piece key={key} type={piece.type} position={piece.position} isWhite={piece.isWhite} isFlipped={isFlipped} handlers={pieceEventHandlers}/>)}
+            {moveHints?.map((hint, key) => <MoveHint key={key} type="" index={hint.target_square} isFlipped={isFlipped}/>)}
           </div>
           <div className={cn("boardWidth","flex flex-row justify-between text-center text-white font-bold font-mono text-xs sm:text-sm lg:text-lg w-full")}>
             {rank.map((char, key) => (<p key={key} className="w-full">{char}</p>))}
           </div>
         </div>
-        <Sidebar evaluation={evaluation} bestMove={bestMove} moveHistory={movesHistory} flip={() => {setIsBlack(!isBlack)}}/>
+        <Sidebar evaluation={evaluation} bestMove={bestMove} moveHistory={movesHistory} flip={() => {setIsFlipped(!isFlipped)}}/>
       </div>
     </div>
   )

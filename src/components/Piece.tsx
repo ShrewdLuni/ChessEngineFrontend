@@ -23,16 +23,16 @@ interface PieceProps {
     handleDrop: any;
     handleClick: any;
   };
-  isBlack?: boolean;
+  isFlipped: boolean;
 }
 
-export const Piece = ({type, isWhite, position, handlers, isBlack = false} : PieceProps) => {
+export const Piece = ({type, isWhite, position, handlers, isFlipped} : PieceProps) => {
   const white = {"pawn": whitePawn, "knight": whiteKnight, "bishop": whiteBishop, "rook": whiteRook, "queen": whiteQueen, "king": whiteKing};
   const black = {"pawn": blackPawn, "knight": blackKnight, "bishop": blackBishop, "rook": blackRook, "queen": blackQueen, "king": blackKing};
   const piece = isWhite ? white[type] : black[type];
 
   let convertedPosition = helpers.getRowAndColFromPosition(position);
-  if(isBlack){
+  if(isFlipped){
     convertedPosition.col = 7 - convertedPosition.col
     convertedPosition.row = 7 - convertedPosition.row
   }

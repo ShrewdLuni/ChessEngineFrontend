@@ -4,11 +4,11 @@ import { cn } from '@/lib/utils';
 interface MoveHintProps {
   type: string;
   index: number;
-  isBlack: boolean;
+  isFlipped: boolean;
 }
 
-export const MoveHint = ({type, index, isBlack} : MoveHintProps) => {
-  if(isBlack)
+export const MoveHint = ({type, index, isFlipped} : MoveHintProps) => {
+  if(isFlipped)
     index = 63 - index
   let convertedPosition = helpers.getRowAndColFromIndex(index);
 
