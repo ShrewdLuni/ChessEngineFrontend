@@ -25,7 +25,6 @@ export const ChessBoard = () => {
   const [isGameOver, setIsGameOver] = useState(false)
   const [isStartScreen, setsIsStartScreen] = useState(true)
 
-
   const [isFlipped, setIsFlipped] = useState(false) 
 
   const move = getMoveFunction(setPieces)
@@ -54,19 +53,10 @@ export const ChessBoard = () => {
       return
     const startIndex = helpers.getIndexFromPosition(currentPosition);
     const targetIndex = helpers.getIndexFromPosition(targetPosition);
-    const foundMove = movesData?.find(move => 
-      move.starting_square === (isFlipped ? 63 - startIndex : startIndex) && 
-      move.target_square === (isFlipped ? 63 - targetIndex : targetIndex)
-    );
-    
+    const foundMove = movesData?.find(move => move.starting_square === (isFlipped ? 63 - startIndex : startIndex) && move.target_square === (isFlipped ? 63 - targetIndex : targetIndex));
 
     if (foundMove) {
-      if(isFlipped){
-        move(helpers.getPositionFromIndex(63 - helpers.getIndexFromPosition(currentPosition)), helpers.getPositionFromIndex(63 - helpers.getIndexFromPosition(targetPosition))); //flipped
-      }
-      else{
-        move(currentPosition,targetPosition);
-      }
+      move(isFlipped ? helpers.getPositionFromIndex(63 - startIndex) : currentPosition, isFlipped ? helpers.getPositionFromIndex(63 - targetIndex) : targetPosition);
       websocket.engineMakeMove(foundMove)
       setMoveHints(null)
     } else {

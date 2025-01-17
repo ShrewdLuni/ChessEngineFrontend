@@ -82,7 +82,7 @@ const helpers = {
       if(!isNaN(Number(char)))
         index += Number(char);
       else
-      pieces.push({ isWhite: char == char.toUpperCase(), position: helpers.getPositionFromIndex(index++), type: helpers.getPieceTypeFromFEN(char)});
+        pieces.push({ isWhite: char == char.toUpperCase(), position: helpers.getPositionFromIndex(index++), type: helpers.getPieceTypeFromFEN(char)});
     }
     return pieces;
   },

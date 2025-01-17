@@ -8,7 +8,6 @@ export const EvaluationBar = ({ value } : EvaluationBarProps) => {
   const maxValue = 15
   const normalizedValue = ((value + maxValue) / (2 * maxValue)) * 100;
   const clampedValue = helpers.clamp(normalizedValue, 0, 100);
-  console.log(clampedValue);
 
   return (
     <div className="h-5 border-black flex">
