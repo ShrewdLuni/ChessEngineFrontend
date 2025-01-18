@@ -9,8 +9,11 @@ import '../assets/board.css';
 import { Sidebar } from "./sidebar";
 
 export const ChessBoard = () => {
+  const [colorToPlay, setColorToPlay] = useState<"white" | "black">("white")
+  const [userFEN, setUserFEN] = useState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+
   const tiles = useMemo(() => helpers.getTiles(), []);
-  const [pieces, setPieces] = useState(helpers.getPiecesFromFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"));
+  const [pieces, setPieces] = useState(helpers.getPiecesFromFEN(userFEN));
   const [moveHints, setMoveHints] = useState<{starting_square: number, target_square: number}[] | null>();
 
   const [currentPosition, setCurrentPosition] = useState("e6");
@@ -25,7 +28,7 @@ export const ChessBoard = () => {
   const [isGameOver, setIsGameOver] = useState(false)
   const [isStartScreen, setsIsStartScreen] = useState(true)
 
-  const [isFlipped, setIsFlipped] = useState(false) 
+  const [isFlipped, setIsFlipped] = useState(false)
 
   const move = getMoveFunction(setPieces)
   const updatePiecesFromFEN = getUpdatePiecesFromFENFunction(setPieces)
@@ -81,7 +84,7 @@ export const ChessBoard = () => {
             {rank.map((char, key) => (<p key={key} className="w-full">{char}</p>))}
           </div>
         </div>
-        <Sidebar evaluation={evaluation} bestMove={bestMove} moveHistory={movesHistory} flip={() => {setIsFlipped(!isFlipped)}}/>
+        <Sidebar evaluation={evaluation} bestMove={bestMove} moveHistory={movesHistory} flip={() => {setIsFlipped(!isFlipped)}} colorToPlay={colorToPlay} setColorToPlay={setColorToPlay}/>
       </div>
     </div>
   )

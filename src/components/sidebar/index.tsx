@@ -10,9 +10,11 @@ interface SidebarProps {
   bestMove: string,
   moveHistory: any
   flip: any
+  colorToPlay: any
+  setColorToPlay: any
 }
 
-export const Sidebar = ({evaluation, bestMove, moveHistory, flip} : SidebarProps) => {
+export const Sidebar = ({evaluation, bestMove, moveHistory, flip, colorToPlay, setColorToPlay} : SidebarProps) => {
 
   return (
     <div>
@@ -31,7 +33,7 @@ export const Sidebar = ({evaluation, bestMove, moveHistory, flip} : SidebarProps
         </div>
         <MoveHistory moveHistory={moveHistory}/>
         {false && <PromotionModule isWhite={true}/>}
-        {true && <GameSetupModule/>}
+        {true && <GameSetupModule colorToPlay={colorToPlay} setColorToPlay={setColorToPlay}/>}
       </div>
     </div>
   )

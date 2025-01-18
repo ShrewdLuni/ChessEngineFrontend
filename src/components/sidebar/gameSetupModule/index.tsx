@@ -2,11 +2,15 @@ import { Castling } from "./Castling"
 import { ColorToMove } from "./ColorToMove"
 import { Fen } from "./Fen"
 
+interface GemeSetupModuleProps {
+  colorToPlay: any
+  setColorToPlay: any
+}
 
-export const GameSetupModule = () => {
+export const GameSetupModule = ({colorToPlay, setColorToPlay}: GemeSetupModuleProps) => {
   return (
     <div className="text-left">
-      <ColorToMove/>
+      <ColorToMove colorToPlay={colorToPlay} setColorToPlay={setColorToPlay}/>
       <Castling/>
       <Fen/>
     </div>
