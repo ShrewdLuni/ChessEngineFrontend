@@ -84,7 +84,7 @@ export const ChessBoard = () => {
             {rank.map((char, key) => (<p key={key} className="w-full">{char}</p>))}
           </div>
         </div>
-        <Sidebar evaluation={evaluation} bestMove={bestMove} moveHistory={movesHistory} flip={() => {setIsFlipped(!isFlipped)}} colorToPlay={colorToPlay} setColorToPlay={setColorToPlay}/>
+        <Sidebar evaluation={evaluation} bestMove={bestMove} moveHistory={movesHistory} flip={() => {setIsFlipped(!isFlipped)}} colorToPlay={colorToPlay} setColorToPlay={setColorToPlay} FEN={userFEN} SetFEN={setUserFEN}/>
       </div>
     </div>
   )
