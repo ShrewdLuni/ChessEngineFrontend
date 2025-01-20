@@ -14,7 +14,7 @@ export const GameSetupModule = ({colorToPlay, setColorToPlay, FEN, SetFEN}: Geme
   return (
     <div className="text-left">
       <ColorToMove colorToPlay={colorToPlay} setColorToPlay={setColorToPlay}/>
-      <Castling/>
+      <Castling FEN={FEN} SetFEN={SetFEN} />
       <Fen FEN={FEN} SetFEN={SetFEN}/>
     </div>
   )
