@@ -9,7 +9,6 @@ import '../assets/board.css';
 import { Sidebar } from "./sidebar";
 
 export const ChessBoard = () => {
-  const [colorToPlay, setColorToPlay] = useState<"white" | "black">("white")
   const [userFEN, setUserFEN] = useState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 
   const tiles = useMemo(() => helpers.getTiles(), []);
@@ -84,7 +83,7 @@ export const ChessBoard = () => {
             {rank.map((char, key) => (<p key={key} className="w-full">{char}</p>))}
           </div>
         </div>
-        <Sidebar evaluation={evaluation} bestMove={bestMove} moveHistory={movesHistory} flip={() => {setIsFlipped(!isFlipped)}} colorToPlay={colorToPlay} setColorToPlay={setColorToPlay} FEN={userFEN} SetFEN={setUserFEN}/>
+        <Sidebar evaluation={evaluation} bestMove={bestMove} moveHistory={movesHistory} flip={() => {setIsFlipped(!isFlipped)}} FEN={userFEN} SetFEN={setUserFEN}/>
       </div>
     </div>
   )

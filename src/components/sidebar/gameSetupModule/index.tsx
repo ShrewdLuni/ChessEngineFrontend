@@ -3,18 +3,15 @@ import { ColorToMove } from "./ColorToMove"
 import { Fen } from "./Fen"
 
 interface GemeSetupModuleProps {
-  colorToPlay: any
-  setColorToPlay: any
-
   FEN: string
   SetFEN: any
 }
 
-export const GameSetupModule = ({colorToPlay, setColorToPlay, FEN, SetFEN}: GemeSetupModuleProps) => {
+export const GameSetupModule = ({FEN, SetFEN}: GemeSetupModuleProps) => {
   return (
     <div className="text-left">
-      <ColorToMove colorToPlay={colorToPlay} setColorToPlay={setColorToPlay}/>
-      <Castling FEN={FEN} SetFEN={SetFEN} />
+      <ColorToMove FEN={FEN} SetFEN={SetFEN}/>
+      <Castling FEN={FEN} SetFEN={SetFEN}/>
       <Fen FEN={FEN} SetFEN={SetFEN}/>
     </div>
   )
