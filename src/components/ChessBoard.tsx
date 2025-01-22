@@ -43,6 +43,12 @@ export const ChessBoard = () => {
   const flie = isFlipped ? ["1", "2", "3", "4", "5", "6", "7", "8"] : ["8", "7", "6", "5", "4", "3", "2", "1"];
 
   useEffect(() => {
+    const fenRegex = /^([rnbqkpRNBQKP1-8]+\/){7}[rnbqkpRNBQKP1-8]+ [wb] (K?Q?k?q?|-) (-|[a-h][36]) \d+ \d+$/;
+    if(fenRegex.test(userFEN))
+      updatePiecesFromFEN(userFEN)
+  }, [userFEN])
+
+  useEffect(() => {
     if(movesData == undefined)
       return
     const index = helpers.getIndexFromPosition(currentPosition);
