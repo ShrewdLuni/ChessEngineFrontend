@@ -49,6 +49,10 @@ export function useWebSocket({setEvaluation, setBestMove, setMovesData, updatePi
         case 'engine_game_over':
           setIsGameOver(true)
           break;
+        case 'engine_set_position':
+          console.log(data.fen)
+          updatePiecesFromFEN(data.fen)
+          break;
         default:
           console.log('Unknown action:', data);
       }
@@ -69,9 +73,11 @@ export function useWebSocket({setEvaluation, setBestMove, setMovesData, updatePi
     engineMakeMove: (move: Move) => {
       socketSend({action: "engine_make_move", move: move})
     },
-  
     unMakeMove: () => {
       socketSend({action: "engine_unmake_move"})
+    },
+    engineSetPosition: (fen: string) => {
+      socketSend({action: "engine_set_position", fen: fen})
     }
   }
 
