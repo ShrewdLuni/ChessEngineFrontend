@@ -41,7 +41,7 @@ export const ChessBoard = () => {
   useEffect(() => {
     const fenRegex = /^([rnbqkpRNBQKP1-8]+\/){7}[rnbqkpRNBQKP1-8]+ [wb] (K?Q?k?q?|-) (-|[a-h][36]) \d+ \d+$/;
     if(fenRegex.test(userFEN))
-      updatePiecesFromFEN(userFEN)
+      (userFEN)
   }, [userFEN])
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export const ChessBoard = () => {
   return (
     <div className="flex flex-row">
       <BoardRender boardRef={boardRef} isFlipped={isFlipped} moveHints={moveHints} pieces={pieces} tiles={tiles} pieceEventHandlers={pieceEventHandlers}/>
-      <Sidebar evaluation={evaluation} bestMove={bestMove} moveHistory={movesHistory} flip={() => {setIsFlipped(!isFlipped)}} FEN={userFEN} SetFEN={setUserFEN}/>
+      <Sidebar evaluation={evaluation} bestMove={bestMove} moveHistory={movesHistory} flip={() => {setIsFlipped(!isFlipped)}} FEN={userFEN} SetFEN={setUserFEN} engineSetPosition={websocket.engineSetPosition}/>
     </div>
   )
 }

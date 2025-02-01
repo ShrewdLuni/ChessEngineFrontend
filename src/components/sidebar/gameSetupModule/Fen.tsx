@@ -1,9 +1,10 @@
 interface FenProps {
   FEN: string
   SetFEN: any
+  engineSetPosition: any
 }
 
-export const Fen = ({FEN, SetFEN} : FenProps) => {
+export const Fen = ({FEN, SetFEN, engineSetPosition} : FenProps) => {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(FEN).then(() => {
       console.log("FEN copied to clipboard:", FEN);
@@ -22,7 +23,7 @@ export const Fen = ({FEN, SetFEN} : FenProps) => {
         <div className="flex flex-1 flex-row text-left cursor-pointer border-2 px-2 py-1 border-[#8c8fbc] rounded-md hover:bg-[#8c8fbc] transition-all duration-300" onClick={() => {SetFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")}}>Reset</div>
         <div className="flex flex-1 flex-row text-left cursor-pointer border-2 px-2 py-1 border-[#8c8fbc] rounded-md hover:bg-[#8c8fbc] transition-all duration-300" onClick={() => {SetFEN("8/8/8/8/8/8/8/8 w - - 0 1")}}>Clear</div>
         <div className="flex flex-1 flex-row text-left cursor-pointer border-2 px-2 py-1 border-[#8c8fbc] rounded-md hover:bg-[#8c8fbc] transition-all duration-300" onClick={copyToClipboard}>Copy</div>
-        <div className="flex flex-1 flex-row text-left cursor-pointer border-2 px-2 py-1 border-[#8c8fbc] rounded-md hover:bg-[#8c8fbc] transition-all duration-300" onClick={copyToClipboard}>Go</div>
+        <div className="flex flex-1 flex-row text-left cursor-pointer border-2 px-2 py-1 border-[#8c8fbc] rounded-md hover:bg-[#8c8fbc] transition-all duration-300" onClick={() => {engineSetPosition(FEN)}}>Go</div>
       </div>
     </div>
   )

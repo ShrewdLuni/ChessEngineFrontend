@@ -23,7 +23,8 @@ export const Castling = ({FEN, SetFEN}: CastlingProps) => {
       if(castling[item].state)
         newCastle += item
     }
-    FENElements[2] = newCastle
+    FENElements[2] = newCastle == "" ? "-" : newCastle
+    console.log(FENElements)
     SetFEN(FENElements.join(" "))
   }
 
