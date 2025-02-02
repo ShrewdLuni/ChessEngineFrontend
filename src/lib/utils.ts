@@ -35,8 +35,16 @@ export function getMoveFunction(setPieces: React.Dispatch<React.SetStateAction<P
       if (pieceIndex === -1) return prevPieces;
       const captureIndex = prevPieces.findIndex(piece => piece.position == to);
       playSound(captureIndex == -1 ? moveSound : captureSound)
+
+      const promotionTypes: Record<number, PieceType> = {
+        3: "queen",
+        4: "knight",
+        5: "bishop",
+        6: "rook",
+      };
+
       return prevPieces.map((piece, index) =>
-        index === pieceIndex ? { ...piece, position: to } : piece
+        index === pieceIndex ? { ...piece, position: to, type: promotionTypes[_flag] || piece.type } : piece
       );
     });
   }
