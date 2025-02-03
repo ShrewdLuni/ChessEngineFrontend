@@ -13,9 +13,13 @@ interface SidebarProps {
   FEN: string
   SetFEN: any
   engineSetPosition: any
+
+  isPromotion: any
+  handleMove: any
+  promotionOptions: any
 }
 
-export const Sidebar = ({evaluation, bestMove, moveHistory, flip, FEN, SetFEN, engineSetPosition} : SidebarProps) => {
+export const Sidebar = ({evaluation, bestMove, moveHistory, flip, FEN, SetFEN, engineSetPosition, isPromotion, handleMove, promotionOptions} : SidebarProps) => {
 
   return (
     <div>
@@ -33,7 +37,7 @@ export const Sidebar = ({evaluation, bestMove, moveHistory, flip, FEN, SetFEN, e
           <EvaluationBar value={evaluation}/>
         </div>
         {false && <MoveHistory moveHistory={moveHistory}/>}
-        {false && <PromotionModule isWhite={true}/>}
+        {isPromotion && <PromotionModule isWhite={true} handleMove={handleMove} promotionOptions={promotionOptions}/>}
         {true && <GameSetupModule FEN={FEN} SetFEN={SetFEN} engineSetPosition={engineSetPosition}/>}
       </div>
     </div>
