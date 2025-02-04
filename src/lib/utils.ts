@@ -39,8 +39,8 @@ export function getMoveFunction(setPieces: React.Dispatch<React.SetStateAction<P
       const promotionTypes: Record<number, PieceType> = {
         3: "queen",
         4: "knight",
-        5: "bishop",
-        6: "rook",
+        5: "rook",
+        6: "bishop",
       };
 
       return prevPieces.map((piece, index) =>
