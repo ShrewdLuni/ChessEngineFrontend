@@ -45,6 +45,7 @@ export const ChessBoard = () => {
     move(from, to, flag);
     websocket.engineMakeMove(foundMove)
     setMoveHints(null)
+    setIsPromotion(false)
   }
 
   useEffect(() => {
@@ -60,7 +61,7 @@ export const ChessBoard = () => {
     const index = helpers.getIndexFromPosition(currentPosition);
     const targetSquares = movesData.filter(move => move.starting_square === (isFlipped ? 63 - index : index));
     setMoveHints(targetSquares);
-  }, [currentPosition])
+  }, [currentPosition, movesData])
 
   useEffect(() => {
     if(targetPosition == "a0" || currentPosition == targetPosition)
@@ -81,12 +82,7 @@ export const ChessBoard = () => {
         setPromotionOptions(promotionFunctions)
         setIsPromotion(true)
       }
-      else {
-        move(isFlipped ? helpers.getPositionFromIndex(63 - startIndex) : currentPosition, isFlipped ? helpers.getPositionFromIndex(63 - targetIndex) : targetPosition);
-        websocket.engineMakeMove(foundMove)
-        setMoveHints(null)
-        setIsPromotion(false)
-      }
+      handleMove(foundMove, isFlipped ? helpers.getPositionFromIndex(63 - startIndex) : currentPosition, isFlipped ? helpers.getPositionFromIndex(63 - targetIndex) : targetPosition)
     } else {
       console.log("Not legal move was used");
     }

@@ -37,7 +37,7 @@ export const Sidebar = ({evaluation, bestMove, moveHistory, flip, FEN, SetFEN, e
           <EvaluationBar value={evaluation}/>
         </div>
         {false && <MoveHistory moveHistory={moveHistory}/>}
-        {isPromotion && <PromotionModule isWhite={true} handleMove={handleMove} promotionOptions={promotionOptions}/>}
+        {isPromotion && <PromotionModule isWhite={FEN.split(" ")[1] == "w"} handleMove={handleMove} promotionOptions={promotionOptions}/>}
         {true && <GameSetupModule FEN={FEN} SetFEN={SetFEN} engineSetPosition={engineSetPosition}/>}
       </div>
     </div>
