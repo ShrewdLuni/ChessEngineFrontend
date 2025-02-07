@@ -19,12 +19,12 @@ export const ChessBoard = () => {
 
   const [evaluation, setEvaluation] = useState(0);
   const [bestMove, setBestMove] = useState("")
-  const [movesHistory, setMovesHistory] = useState(null)
+  const [movesHistory, setMovesHistory] = useState([])
 
   const [movesData, setMovesData] = useState<Move[]>();
 
   const [isGameOver, setIsGameOver] = useState(false)
-  const [isStartScreen, setsIsStartScreen] = useState(true)
+  const [isSettings, setIsSettings] = useState(false)
 
   const [isPromotion, setIsPromotion] = useState(false)
   const [promotionOptions, setPromotionOptions] = useState<{ move: Move; from: string; to: string; }[]>([])
@@ -82,7 +82,9 @@ export const ChessBoard = () => {
         setPromotionOptions(promotionFunctions)
         setIsPromotion(true)
       }
-      handleMove(foundMove, isFlipped ? helpers.getPositionFromIndex(63 - startIndex) : currentPosition, isFlipped ? helpers.getPositionFromIndex(63 - targetIndex) : targetPosition)
+      else{
+        handleMove(foundMove, isFlipped ? helpers.getPositionFromIndex(63 - startIndex) : currentPosition, isFlipped ? helpers.getPositionFromIndex(63 - targetIndex) : targetPosition)
+      }
     } else {
       console.log("Not legal move was used");
     }
@@ -92,7 +94,7 @@ export const ChessBoard = () => {
   return (
     <div className="flex flex-row">
       <BoardRender boardRef={boardRef} isFlipped={isFlipped} moveHints={moveHints} pieces={pieces} tiles={tiles} pieceEventHandlers={pieceEventHandlers}/>
-      <Sidebar evaluation={evaluation} bestMove={bestMove} moveHistory={movesHistory} flip={() => {setIsFlipped(!isFlipped)}} FEN={userFEN} SetFEN={setUserFEN} engineSetPosition={websocket.engineSetPosition} isPromotion={isPromotion} handleMove={handleMove} promotionOptions={promotionOptions}/>
+      <Sidebar evaluation={evaluation} bestMove={bestMove} moveHistory={movesHistory} flip={() => {setIsFlipped(!isFlipped)}} FEN={userFEN} SetFEN={setUserFEN} engineSetPosition={websocket.engineSetPosition} isPromotion={isPromotion} handleMove={handleMove} promotionOptions={promotionOptions} isGameOver={isGameOver} isSettings={isSettings} setIsSettings={() => {setIsSettings(!isSettings)}} toggleRematch={() => {setIsGameOver(false);setIsSettings(true)}} toggleSettings={() => {setIsGameOver(false);setIsSettings(true)}}/>
     </div>
   )
 }
