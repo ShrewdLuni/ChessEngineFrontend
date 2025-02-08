@@ -50,8 +50,8 @@ export function useWebSocket({setEvaluation, setBestMove, setMovesData, updatePi
           setIsGameOver(true)
           break;
         case 'engine_set_position':
-          console.log(data.fen)
           updatePiecesFromFEN(data.fen)
+          setEvaluation((data.evaluation  / 100))
           break;
         default:
           console.log('Unknown action:', data);
