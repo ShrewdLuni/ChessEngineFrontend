@@ -19,30 +19,23 @@ interface PieceProps {
   isWhite: boolean;
   position: string;
   handlers: {
-    handleDrag: any;
-    handleDrop: any;
-    handleClick: any;
+    handleDrag: (e: React.DragEvent<HTMLDivElement>) => void;
+    handleDrop: (e: React.DragEvent<HTMLDivElement>) => void;
+    handleClick: (e: React.MouseEvent<HTMLDivElement>) => void;
   };
   isFlipped: boolean;
 }
 
 export const Piece = ({type, isWhite, position, handlers, isFlipped} : PieceProps) => {
-  const white = {"pawn": whitePawn, "knight": whiteKnight, "bishop": whiteBishop, "rook": whiteRook, "queen": whiteQueen, "king": whiteKing};
-  const black = {"pawn": blackPawn, "knight": blackKnight, "bishop": blackBishop, "rook": blackRook, "queen": blackQueen, "king": blackKing};
+  const white = { "pawn": whitePawn, "knight": whiteKnight, "bishop": whiteBishop, "rook": whiteRook, "queen": whiteQueen, "king": whiteKing };
+  const black = { "pawn": blackPawn, "knight": blackKnight, "bishop": blackBishop, "rook": blackRook, "queen": blackQueen, "king": blackKing} ;
   const piece = isWhite ? white[type] : black[type];
 
-  let convertedPosition = helpers.getRowAndColFromPosition(position);
-  if(isFlipped){
-    convertedPosition.col = 7 - convertedPosition.col
-    convertedPosition.row = 7 - convertedPosition.row
-  }
-
-  const top = `${convertedPosition.row * 12.5}%`;
-  const left = `${convertedPosition.col * 12.5}%`;
+  let {row, col} = helpers.getRowAndColFromPosition(position);
 
   return (
     <div 
-      style={{top, left,backgroundImage: `url(${piece})`, imageRendering:`auto`}}
+      style={{top: `${(isFlipped ? 7 - row : row) * 12.5}%`, left: `${(isFlipped ? 7 - col : col) * 12.5}%`, backgroundImage: `url(${piece})`, imageRendering: `auto`}}
       className="tile absolute bg-contain bg-no-repeat z-50" 
       draggable 
       onDragStart={handlers.handleDrag} 

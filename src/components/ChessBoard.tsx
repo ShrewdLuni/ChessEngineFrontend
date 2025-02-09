@@ -19,7 +19,7 @@ export const ChessBoard = () => {
 
   const [evaluation, setEvaluation] = useState(0);
   const [bestMove, setBestMove] = useState("")
-  const [movesHistory, setMovesHistory] = useState([])
+  const [movesHistory, setMovesHistory] = useState<{ white: string; black: string; }[]>([])
 
   const [movesData, setMovesData] = useState<Move[]>();
 

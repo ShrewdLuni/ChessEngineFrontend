@@ -1,17 +1,11 @@
 interface FenProps {
-  FEN: string
-  SetFEN: any
-  engineSetPosition: any
+  FEN: string;
+  SetFEN: React.Dispatch<React.SetStateAction<string>>;
+  engineSetPosition: (fen: string) => void;
 }
 
-export const Fen = ({FEN, SetFEN, engineSetPosition} : FenProps) => {
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(FEN).then(() => {
-      console.log("FEN copied to clipboard:", FEN);
-    }).catch(err => {
-      console.error("Failed to copy FEN:", err);
-    });
-  };
+export const Fen = ({ FEN, SetFEN, engineSetPosition } : FenProps) => {
+  const copyToClipboard = () => {navigator.clipboard.writeText(FEN).then(() => {console.log("FEN copied to clipboard:", FEN);}).catch(err => {console.error("Failed to copy FEN:", err);});};
 
   return (
     <div className="flex flex-col gap-2">

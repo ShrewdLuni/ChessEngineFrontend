@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
 interface webSocketProps{
-  setEvaluation: any,
-  setBestMove: any
-  setMovesData: any
-  updatePiecesFromFEN: any
-  setIsGameOver: any
+  setEvaluation: React.Dispatch<React.SetStateAction<number>>;
+  setBestMove: React.Dispatch<React.SetStateAction<string>>;
+  setMovesData: React.Dispatch<React.SetStateAction<Move[] | undefined>>;
+  updatePiecesFromFEN: (newFEN: string) => void;
+  setIsGameOver: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface WebSocketMessage {
@@ -13,7 +13,7 @@ interface WebSocketMessage {
   [key: string]: any;
 }
 
-export function useWebSocket({setEvaluation, setBestMove, setMovesData, updatePiecesFromFEN, setIsGameOver} : webSocketProps) {
+export function useWebSocket({ setEvaluation, setBestMove, setMovesData, updatePiecesFromFEN, setIsGameOver } : webSocketProps) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   const socketSend = (message: WebSocketMessage) => {
@@ -35,23 +35,24 @@ export function useWebSocket({setEvaluation, setBestMove, setMovesData, updatePi
 
       switch (data.action) {
         case 'engine_get_legal_moves':
-          setMovesData(data.moves)
+          setMovesData(data.moves);
           break;
         case 'engine_make_move':
           ws.send(JSON.stringify({ action: "engine_get_legal_moves" }));
-          updatePiecesFromFEN(data.fen)
-          setEvaluation(-(data.evaluation  / 100))
-          setBestMove(data.move)
+          updatePiecesFromFEN(data.fen);
+          setEvaluation(-(data.evaluation  / 100));
+          setBestMove(data.move);
           break;
         case 'engine_update_evaluation':
-          setEvaluation(-(data.evaluation  / 100))
+          setEvaluation(-(data.evaluation  / 100));
           break;
         case 'engine_game_over':
-          setIsGameOver(true)
+          setIsGameOver(true);
           break;
         case 'engine_set_position':
-          updatePiecesFromFEN(data.fen)
-          setEvaluation((data.evaluation  / 100))
+          updatePiecesFromFEN(data.fen);
+          setEvaluation((data.evaluation  / 100));
+          setBestMove("");
           break;
         default:
           console.log('Unknown action:', data);
@@ -71,13 +72,13 @@ export function useWebSocket({setEvaluation, setBestMove, setMovesData, updatePi
 
   const socketMethods = {
     engineMakeMove: (move: Move) => {
-      socketSend({action: "engine_make_move", move: move})
+      socketSend({action: "engine_make_move", move: move});
     },
     unMakeMove: () => {
-      socketSend({action: "engine_unmake_move"})
+      socketSend({action: "engine_unmake_move"});
     },
     engineSetPosition: (fen: string) => {
-      socketSend({action: "engine_set_position", fen: fen})
+      socketSend({action: "engine_set_position", fen: fen});
     }
   }
 

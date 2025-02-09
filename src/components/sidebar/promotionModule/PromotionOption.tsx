@@ -1,6 +1,6 @@
 interface PromotionOptionProps {
-  piece: any
-  onClick: any
+  piece: any;
+  onClick: () => void;
 }
 
 export const PromotionOption = ({ piece, onClick } : PromotionOptionProps) => {

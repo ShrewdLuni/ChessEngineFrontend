@@ -1,14 +1,14 @@
-import { RefreshCcw, Settings2 } from "lucide-react"
-import { EvaluationBar } from "./EvaluationBar"
+import { RefreshCcw, Settings2 } from "lucide-react";
+import { EvaluationBar } from "./EvaluationBar";
 
 interface EvaluationProps {
-  evaluation: any
-  bestMove: any
-  flip: any
-  setIsSettings: any
+  evaluation: number;
+  bestMove: string;
+  flip: () => void;
+  setIsSettings: () => void;
 }
 
-export const Evaluation = ({evaluation, bestMove, flip, setIsSettings}: EvaluationProps) => {
+export const Evaluation = ({ evaluation, bestMove, flip, setIsSettings }: EvaluationProps) => {
   return (
     <div className="text-left font-semibold font-mono">
       <div className="flex felx-row justify-between">

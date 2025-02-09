@@ -22,9 +22,9 @@ function getMousePosition(e : MouseEvent | DragEvent | React.MouseEvent<HTMLDivE
 }
 
 export const getPieceEventHandlers = (setCurrentPosition : any, setTargetPosition : any, boardPosition : any) => {
-  let handleDrag = (e : DragEvent) => {setCurrentPosition(getMousePosition(e, boardPosition));}
-  let handleDrop = (e : DragEvent) => {setTargetPosition(getMousePosition(e, boardPosition));}
-  let handleClick = (e : MouseEvent) => {setCurrentPosition(getMousePosition(e, boardPosition));}
+  let handleDrag = (e : React.DragEvent<HTMLDivElement>) => {setCurrentPosition(getMousePosition(e, boardPosition));}
+  let handleDrop = (e : React.DragEvent<HTMLDivElement>) => {setTargetPosition(getMousePosition(e, boardPosition));}
+  let handleClick = (e : React.MouseEvent<HTMLDivElement>) => {setCurrentPosition(getMousePosition(e, boardPosition));}
   return { handleDrag, handleDrop, handleClick };
 }
 

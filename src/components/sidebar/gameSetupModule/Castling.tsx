@@ -1,13 +1,13 @@
 import { cn } from "@/lib/utils";
 
 interface CastlingProps{
-  FEN: string
-  SetFEN: any
+  FEN: string;
+  SetFEN: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const Castling = ({FEN, SetFEN}: CastlingProps) => {
-  const castling: Record<"Q" | "q" | "K" | "k", {text: string; state: boolean;}> = {"Q": {"text": "O-O", "state": false}, "q": {"text": "O-O", "state": false}, "K": {"text": "O-O-O","state": false}, "k": {"text": "O-O-O", "state": false}}
-  const FENElements = FEN.split(" ")
+  const castling: Record<"Q" | "q" | "K" | "k", {text: string; state: boolean;}> = {"Q": {"text": "O-O", "state": false}, "q": {"text": "O-O", "state": false}, "K": {"text": "O-O-O","state": false}, "k": {"text": "O-O-O", "state": false}};
+  const FENElements = FEN.split(" ");
 
   const castlingFEN = FENElements[2] || "";
   for (const symbol of castlingFEN) {
@@ -17,15 +17,14 @@ export const Castling = ({FEN, SetFEN}: CastlingProps) => {
   }
 
   const handleClick = (key: "Q" | "q" | "K" | "k") => {
-    castling[key].state = !castling[key].state
-    let newCastle = ""
+    castling[key].state = !castling[key].state;
+    let newCastle = "";
     for(const item of ["K", "Q", "k", "q"] as (keyof typeof castling)[]){
       if(castling[item].state)
-        newCastle += item
+        newCastle += item;
     }
-    FENElements[2] = newCastle == "" ? "-" : newCastle
-    console.log(FENElements)
-    SetFEN(FENElements.join(" "))
+    FENElements[2] = newCastle == "" ? "-" : newCastle;
+    SetFEN(FENElements.join(" "));
   }
 
   return (

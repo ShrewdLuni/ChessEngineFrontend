@@ -1,9 +1,9 @@
 interface GameStatusProps {
-  toggleRematch: any
-  toggleSettings: any
+  toggleRematch: () => void;
+  toggleSettings: () => void;
 }
 
-export const GameStatus = ({toggleRematch, toggleSettings} : GameStatusProps) => {
+export const GameStatus = ({ toggleRematch, toggleSettings } : GameStatusProps) => {
   return (
     <div className="flex flex-col gap-y-4 py-2 font-mono">
       <p className="text-2xl">{true ? "White" : "Black"} checkmate</p>
