@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { getPieceEventHandlers, getMoveFunction, getUpdatePiecesFromFENFunction } from "@/lib/utils";
+import { getPieceEventHandlers, getMoveFunction, getUpdatePiecesFromFENFunction, getClickTragetUpdate } from "@/lib/utils";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { useBoardPosition } from "@/hooks/useBoardPosition";
 import helpers from "../lib/helper";
@@ -40,6 +40,7 @@ export const ChessBoard = () => {
   const boardPosition = useBoardPosition(boardRef); 
 
   const pieceEventHandlers = getPieceEventHandlers(setCurrentPosition, setTargetPosition, boardPosition)
+  const onTargetClick = getClickTragetUpdate(setTargetPosition, boardPosition)
 
   const handleMove = (foundMove: Move, from: string, to: string, flag: number = 0) => {
     move(from, to, flag);
@@ -64,6 +65,7 @@ export const ChessBoard = () => {
   }, [currentPosition, movesData])
 
   useEffect(() => {
+    console.log(currentPosition, targetPosition)
     if(targetPosition == "a0" || currentPosition == targetPosition)
       return
     const startIndex = helpers.getIndexFromPosition(currentPosition);
@@ -93,7 +95,7 @@ export const ChessBoard = () => {
 
   return (
     <div className="flex flex-row">
-      <BoardRender boardRef={boardRef} isFlipped={isFlipped} moveHints={moveHints} pieces={pieces} tiles={tiles} pieceEventHandlers={pieceEventHandlers}/>
+      <BoardRender boardRef={boardRef} isFlipped={isFlipped} moveHints={moveHints} pieces={pieces} tiles={tiles} pieceEventHandlers={pieceEventHandlers} onTargetClick={onTargetClick}/>
       <Sidebar evaluation={evaluation} bestMove={bestMove} moveHistory={movesHistory} flip={() => {setIsFlipped(!isFlipped)}} FEN={userFEN} SetFEN={setUserFEN} engineSetPosition={websocket.engineSetPosition} isPromotion={isPromotion} handleMove={handleMove} promotionOptions={promotionOptions} isGameOver={isGameOver} isSettings={isSettings} setIsSettings={() => {setIsSettings(!isSettings)}} toggleRematch={() => {setIsGameOver(false);websocket.engineSetPosition(userFEN)}} toggleSettings={() => {setIsGameOver(false);setIsSettings(true)}}/>
     </div>
   )
