@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { getPieceEventHandlers, getMoveFunction, getUpdatePiecesFromFENFunction, getClickTragetUpdate } from "@/lib/utils";
+import { getPieceEventHandlers, getMoveFunction, getUpdatePiecesFromFENFunction, getClickTragetUpdate, cn } from "@/lib/utils";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { useBoardPosition } from "@/hooks/useBoardPosition";
 import helpers from "../lib/helper";
 import '../assets/board.css';
+import '../assets/flex.css';
 import { Sidebar } from "./sidebar";
 import { BoardRender } from "./BoardRender";
 
@@ -94,7 +95,7 @@ export const ChessBoard = () => {
   }, [targetPosition])
 
   return (
-    <div className="flex flex-row">
+    <div className="flex responsive-flex gap-y-4 justify-center mt-3 lg:mt-0">
       <BoardRender boardRef={boardRef} isFlipped={isFlipped} moveHints={moveHints} pieces={pieces} tiles={tiles} pieceEventHandlers={pieceEventHandlers} onTargetClick={onTargetClick}/>
       <Sidebar evaluation={evaluation} bestMove={bestMove} moveHistory={movesHistory} flip={() => {setIsFlipped(!isFlipped)}} FEN={userFEN} SetFEN={setUserFEN} engineSetPosition={websocket.engineSetPosition} isPromotion={isPromotion} handleMove={handleMove} promotionOptions={promotionOptions} isGameOver={isGameOver} isSettings={isSettings} setIsSettings={() => {setIsSettings(!isSettings)}} toggleRematch={() => {setIsGameOver(false);websocket.engineSetPosition(userFEN)}} toggleSettings={() => {setIsGameOver(false);setIsSettings(true)}}/>
     </div>

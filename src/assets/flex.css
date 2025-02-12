@@ -1,0 +1,11 @@
+@media (orientation: portrait) {
+  .responsive-flex {
+    flex-direction: column;
+  }
+}
+
+@media (orientation: landscape) {
+  .responsive-flex {
+    flex-direction: row;
+  }
+}
