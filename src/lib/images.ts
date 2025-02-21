@@ -51,6 +51,14 @@ const getColor = (color: ColorInput): Color => {
   return _color;
 };
 
+
+/**
+ * Gets piece icon(s) based on the input
+ * @param color - The piece color
+ * @param type - Single piece type or array of piece types
+ * @returns Single piece icon if input is single type or array of length 1,
+ *          Array of piece icons in the same order as input array otherwise
+ */
 export const getPieceIcon: (color: ColorInput, type: PieceType | PieceType[]) => any | any[] = (color: ColorInput, type: PieceType | PieceType[]) => {
   let _color = getColor(color)
   if(Array.isArray(type)){
