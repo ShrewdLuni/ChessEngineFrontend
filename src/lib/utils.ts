@@ -1,18 +1,11 @@
 import { type ClassValue, clsx } from "clsx"
-import { debounce } from "lodash";
 import { twMerge } from "tailwind-merge"
+import { playSound } from "./sounds";
 import helpers from "./helper";
-import moveSound from '../assets/sounds/move.mp3';
-import captureSound from '../assets/sounds/capture.mp3'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
-
-export const playSound = debounce((source : string) => {
-  const sound = new Audio(source);
-  sound.play();
-}, 100);
 
 function getMousePosition(e : MouseEvent | DragEvent | React.MouseEvent<HTMLDivElement, MouseEvent>, boardPosition: any) {
   const { x, y, sideSize } = boardPosition;
@@ -38,7 +31,7 @@ export function getMoveFunction(setPieces: React.Dispatch<React.SetStateAction<P
       const pieceIndex = prevPieces.findIndex(piece => piece.position === from);
       if (pieceIndex === -1) return prevPieces;
       const captureIndex = prevPieces.findIndex(piece => piece.position == to);
-      playSound(captureIndex == -1 ? moveSound : captureSound)
+      playSound(captureIndex == -1 ? "move" : "capture")
 
       const promotionTypes: Record<number, PieceType> = {
         3: "queen",
@@ -57,7 +50,7 @@ export function getMoveFunction(setPieces: React.Dispatch<React.SetStateAction<P
 
 export function getUpdatePiecesFromFENFunction(setPieces: React.Dispatch<React.SetStateAction<Piece[]>>){
   let updatePiecesFromFEN = (newFEN: string) => {
-    playSound(moveSound)
+    playSound("move")
     setPieces(helpers.getPiecesFromFEN(newFEN));
   }
   return updatePiecesFromFEN

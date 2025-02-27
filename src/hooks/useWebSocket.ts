@@ -1,6 +1,6 @@
-import { playSound } from "@/lib/utils";
+// import { playSound } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import gameover from '../assets/sounds/gameover.mp3'
+import { playSound } from "@/lib/sounds";
 
 interface webSocketProps{
   setEvaluation: React.Dispatch<React.SetStateAction<number>>;
@@ -50,7 +50,7 @@ export function useWebSocket({ setEvaluation, setBestMove, setMovesData, updateP
           break;
         case 'engine_game_over':
           setIsGameOver(true);
-          playSound(gameover)
+          playSound("gameover")
           break;
         case 'engine_set_position':
           updatePiecesFromFEN(data.fen);

@@ -1,0 +1,1 @@
+type sound = 'move' | 'capture' | 'gameover'
